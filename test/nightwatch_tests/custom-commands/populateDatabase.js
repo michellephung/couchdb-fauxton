@@ -6,14 +6,14 @@ exports.command = function(databaseName) {
 
   for( var i=1 ; i<20 ; i++){
     
-    var documentName = "name" + i;
+    var document_id = "document_" + i;
 
-    database.insert({ number: i }, documentName, function(err, body, header) {
+    database.insert({ number: i }, document_id, function(err, body, header) {
         if (err) {
-          console.log('Error in nano populateDatabase Function: '+documentName+',in database: '+databaseName, err.message);
+          console.log('Error in nano populateDatabase Function: '+document_id+',in database: '+databaseName, err.message);
           return client;
         }
-        console.log('nano created a doc: '+documentName+', in database: '+ databaseName);
+        console.log('nano is populating '+ databaseName);
       });
   }
   

@@ -12,5 +12,5 @@ exports.command = function(databaseName) {
     });
   
 	client.pause(10)
-  	return this; // allows the command to be chained.
+  return this; // allows the command to be chained.
 };

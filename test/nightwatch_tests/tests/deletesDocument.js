@@ -1,7 +1,7 @@
 module.exports = {
 
 	'Deletes a document': function(client){
-		var waitTime = 8000,
+		var waitTime = 10000,
         	timestamp = client.globals.getTimestamp(),
         	newDatabaseName = 'delete_doc_db'+ timestamp,
         	newDocumentName = 'delete_doc_doc'+ timestamp;
@@ -10,13 +10,14 @@ module.exports = {
     	.createDocument(newDocumentName, newDatabaseName)
 		.url('http://localhost:8000')
 		.waitForElementPresent('#dashboard-content a[href="#/database/'+newDatabaseName+'/_all_docs"]', waitTime)
+        .pause(1000)
 		.click('#dashboard-content a[href="#/database/'+newDatabaseName+'/_all_docs"]')
 		.waitForElementPresent('#dashboard-lower-content .btn.btn-small.btn-danger.delete', waitTime)
-		.execute('$("#dashboard-lower-content .btn.btn-small.btn-danger.delete").click();')
+        .execute('$("#dashboard-lower-content .btn.btn-small.btn-danger.delete").click();')
 		.acceptAlert()
 		.url('http://localhost:8000/'+newDatabaseName+'/_all_docs')
-		.waitForElementPresent('html', waitTime)
-		.getText("html",function(result){
+		.waitForElementPresent('pre', waitTime)
+		.getText("pre",function(result){
                 
                 var data = result.value,
                     createdDocumentNotPresent = data.indexOf(newDocumentName);

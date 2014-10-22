@@ -1,6 +1,6 @@
 module.exports = {
 	'Creates a document' : function(client){
-		var waitTime = 8000,
+		var waitTime = 10000,
         timestamp = client.globals.getTimestamp(),
         newDatabaseName = 'create_doc_db'+ timestamp,
         newDocumentName = 'create_doc_doc'+ timestamp;
@@ -23,7 +23,7 @@ module.exports = {
       .waitForElementPresent('#doc button.save-doc.btn.btn-success.save', waitTime)
       .click('#doc button.save-doc.btn.btn-success.save')
       .url('http://localhost:8000/'+newDatabaseName+'/_all_docs')
-      .pause(1000)
+      .waitForElementPresent('body', waitTime)
       .getText("body",function(result){
           var data = result.value,
               createdDocIsPresent = data.indexOf(newDocumentName);
