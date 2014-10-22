@@ -27,4 +27,3 @@ settings.json*
 test/test.config.js
 app/initialize.js
 test/nightwatch_tests/reports/*
-
