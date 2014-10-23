@@ -4,8 +4,12 @@ module.exports = {
         timestamp = client.globals.getTimestamp(),
         newDatabaseName = 'create_doc_db'+ timestamp,
         newDocumentName = 'create_doc_doc'+ timestamp;
+        
+        newDatabaseName ="happy";
+
 
     client
+      .loginToGUI()
       .createDatabase(newDatabaseName)
       .url('http://localhost:8000/#/database/'+newDatabaseName+'/_all_docs')
       .waitForElementPresent('#new-all-docs-button', waitTime)

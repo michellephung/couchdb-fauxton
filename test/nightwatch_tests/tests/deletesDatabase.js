@@ -5,6 +5,7 @@ module.exports = {
 
     client
       .createDatabase(newDatabaseName)
+      .loginToGUI()
       .url('http://localhost:8000/#/database/'+newDatabaseName+'/_all_docs')
       .waitForElementPresent('#dashboard .dropdown-toggle.icon.fonticon-cog', waitTime)
       .click('#dashboard .dropdown-toggle.icon.fonticon-cog')

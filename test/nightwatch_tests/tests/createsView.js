@@ -1,5 +1,4 @@
 module.exports = {
-	
   'Creates a View' : function(client){
 
     var waitTime = 10000,
@@ -15,6 +14,7 @@ module.exports = {
     };
 
     client
+      .loginToGUI()
       .createDatabase(newDatabaseName)
       .populateDatabase(newDatabaseName)
       .url('http://localhost:8000/#/database/'+newDatabaseName+'/_all_docs')

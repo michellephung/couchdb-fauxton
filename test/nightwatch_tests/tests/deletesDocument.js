@@ -6,6 +6,7 @@ module.exports = {
         	newDatabaseName = 'delete_doc_db'+ timestamp,
         	newDocumentName = 'delete_doc_doc'+ timestamp;
     client
+        .loginToGUI()
     	.createDatabase(newDatabaseName)
     	.createDocument(newDocumentName, newDatabaseName)
 		.url('http://localhost:8000')

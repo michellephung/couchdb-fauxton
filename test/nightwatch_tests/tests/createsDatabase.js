@@ -4,13 +4,14 @@ module.exports = {
     var newDatabaseName = 'create_db'+ client.globals.getTimestamp();
 
     client
+      .loginToGUI()
       .url('http://localhost:8000')
       .waitForElementPresent('#new', waitTime)
       .click('#new')
       .pause(1000)
       .setAlertText(newDatabaseName)
       .acceptAlert()
-      .pause(1000)
+      .waitForElementVisible('#global-notifications div.alert', waitTime)
       .url('http://localhost:8000/_all_dbs')
       .getText("html",function(result){
           
