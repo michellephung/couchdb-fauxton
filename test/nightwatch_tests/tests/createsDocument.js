@@ -4,9 +4,6 @@ module.exports = {
         timestamp = client.globals.getTimestamp(),
         newDatabaseName = 'create_doc_db'+ timestamp,
         newDocumentName = 'create_doc_doc'+ timestamp;
-        
-        newDatabaseName ="happy";
-
 
     client
       .loginToGUI()

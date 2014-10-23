@@ -13,6 +13,7 @@ module.exports = {
       .acceptAlert()
       .waitForElementVisible('#global-notifications div.alert', waitTime)
       .url('http://localhost:8000/_all_dbs')
+      .waitForElementVisible('html', waitTime)
       .getText("html",function(result){
           
         var data = result.value,
