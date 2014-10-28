@@ -4,13 +4,16 @@ exports.command = function(databaseName) {
     var nano = client.globals.getNanoInstance();
 
     nano.db.destroy(databaseName, function(err, body, header) {
-      if(err){
-        console.log('in nano DeleteDatabase Function '+databaseName, err.message);
-        return this;
-      }
-      console.log('nano cleaned up: '+ databaseName+' is deleted: ', body);
+        
+        if(err){
+        
+            console.log('in nano DeleteDatabase Function '+databaseName, err.message);
+            return this;
+        }
+        
+        console.log('nano cleaned up: '+ databaseName+' is deleted: ', body);
     });
-    
-  client.pause(10)
-  return this; // allows the command to be chained.
+
+    client.pause(10)
+    return this;
 };
