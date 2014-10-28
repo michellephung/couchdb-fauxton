@@ -1,5 +1,4 @@
 module.exports = {
-    
     'Creates a Database' : function(client) {
         var waitTime = 10000;
         var newDatabaseName = 'create_db'+ client.globals.getTimestamp();
@@ -24,6 +23,6 @@ module.exports = {
               'Checking if new database shows up in _all_dbs.');
             })
             .deleteDatabase(newDatabaseName)
-            .end();
+        .end();
     }
 };

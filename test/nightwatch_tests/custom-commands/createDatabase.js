@@ -1,5 +1,4 @@
 exports.command = function(databaseName) {
-  	
     var client = this;
     var nano = client.globals.getNanoInstance();
     
