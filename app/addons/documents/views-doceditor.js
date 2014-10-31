@@ -222,7 +222,14 @@ function(app, FauxtonAPI, Components, Documents, Databases, resizeColumns, prett
     },
 
     goback: function(){
-      FauxtonAPI.navigate(this.database.url("index") + "?limit=100");
+      
+      var lastPage = FauxtonAPI.router.lastPage[0];
+
+      if(lastPage === undefined || lastPage === "login" || lastPage === ""){
+        FauxtonAPI.navigate(this.database.url("index") + "?limit=100");
+      }else{
+        window.history.back();
+      }
     },
 
     determineStringEditMatch: function(event) {

@@ -97,6 +97,15 @@ function(FauxtonAPI, Auth, Backbone) {
 
       $(FauxtonAPI.el).html(FauxtonAPI.masterLayout.el);
       FauxtonAPI.masterLayout.render();
+
+      this.lastPage = [Backbone.history.fragment];
+      //keep count of number of routes handled by your application
+      Backbone.history.on('route', function() { 
+        this.lastPage.push(Backbone.history.fragment);
+        if(this.lastPage.length > 5){
+          this.lastPage.shift();
+        }
+      }, this);
     },
 
     triggerRouteEvent: function(event, args) {
