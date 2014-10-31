@@ -225,7 +225,7 @@ function(app, FauxtonAPI, Components, Documents, Databases, resizeColumns, prett
       
       var lastPage = FauxtonAPI.router.lastPage[0];
 
-      if(lastPage === undefined || lastPage === "login" || lastPage === ""){
+      if(lastPage === undefined || lastPage === ""){
         FauxtonAPI.navigate(this.database.url("index") + "?limit=100");
       }else{
         window.history.back();
