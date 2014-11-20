@@ -42,17 +42,19 @@ function(app, FauxtonAPI, Components, Documents, Databases) {
       var docLinks = FauxtonAPI.getExtensions('docLinks'),
           newLinks = FauxtonAPI.getExtensions('sidebar:newLinks'),
           addLinks = FauxtonAPI.getExtensions('sidebar:links'),
-          extensionList = FauxtonAPI.getExtensions('sidebar:list');
+          extensionList = FauxtonAPI.getExtensions('sidebar:list'),
+          databaseUrl = FauxtonAPI.urls("allDocs", "app", app.host, this.database.safeID(), '');
+
       return {
         changes_url: '#' + this.database.url('changes'),
-        permissions_url: '#' + this.database.url('app') + '/permissions',
+        permissions_url: '#' + this.collection.urlRef('app') + '/permissions',
         db_url: '#' + this.database.url('index'),
-        database: this.collection.database,
-        database_url: '#' + this.database.url('app'),
+        database_url: '#' + databaseUrl,
         docLinks: docLinks,
         addLinks: addLinks,
         newLinks: newLinks,
-        extensionList: extensionList > 0
+        extensionList: extensionList > 0,
+        databaseUrl: databaseUrl
       };
     },
 

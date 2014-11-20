@@ -20,5 +20,18 @@ define([
 ],
 
 function(app, FauxtonAPI, Documents) {
+
+  FauxtonAPI.registerUrls("allDocs", {
+      server: function (id, query) {
+        return app.host + "/" + id + "/_all_docs" + query;
+      },
+      app: function (id, query) {
+        return 'database/' + id + "/_all_docs" + query;
+      },
+      apiurl: function (id, query) {
+        return window.location.origin + "/" + id + "/_all_docs" + query;
+      }
+  });
+
   return Documents;
 });
