@@ -406,6 +406,7 @@ function(app, FauxtonAPI, PagingCollection) {
     },
 
     urlRef: function(context, params) {
+      if (!context) { context = "server"; }
       var query = "";
 
       if (params) {
@@ -417,14 +418,8 @@ function(app, FauxtonAPI, PagingCollection) {
       } else if (this.params) {
         query = "?" + $.param(this.params);
       }
-
-      if (context === 'app') {
-        return 'database/' + this.database.safeID() + "/_all_docs" + query;
-      } else if (context === "apiurl"){
-        return window.location.origin + "/" + this.database.safeID() + "/_all_docs" + query;
-      } else {
-        return app.host + "/" + this.database.safeID() + "/_all_docs" + query;
-      }
+      
+      return FauxtonAPI.urls("allDocs", context, this.database.safeID(), query);
     },
 
     url: function () {

@@ -49,6 +49,34 @@ function(FauxtonAPI, Layout, Router, RouteObject, utils) {
     FauxtonAPI.router.triggerRouteEvent("route:" + routeEvent, args);
   };
 
+  var urlPaths = {};
+
+  FauxtonAPI.registerUrls = function (namespace, urls) {
+    urlPaths[namespace] = urls;
+  };
+
+  //This is a little rough and needs some improvement. But the basic concept is there
+  FauxtonAPI.urls = function (name, context) {
+    var interceptors = FauxtonAPI.getExtensions('urls:interceptors')[0];
+    //if (_.isEmpty(interceptors)) { interceptors = function () { return false; };}
+    var args = Array.prototype.slice.call(arguments, 2);
+
+    var out = interceptors.apply(null, arguments);
+
+    if (out) { return out; }
+
+    if (!urlPaths[name][context]) {
+      console.trace();
+      console.log('could not find', name, context);
+    }
+
+    out = urlPaths[name][context].apply(null, args);
+
+    console.log('normal url', out);
+    return out;
+  };
+
+
   
   return FauxtonAPI;
 });
