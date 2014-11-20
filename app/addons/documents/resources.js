@@ -177,6 +177,105 @@ function(app, FauxtonAPI, Documents, PagingCollection) {
     }
   });
 
+  Documents.AllDocs = PagingCollection.extend({
+    model: Documents.Doc,
+    documentation: function(){
+      return FauxtonAPI.constants.DOC_URLS.GENERAL;
+    },
+    initialize: function(_models, options) {
+      this.viewMeta = options.viewMeta;
+      this.database = options.database;
+      this.params = _.clone(options.params);
+
+      this.on("remove",this.decrementTotalRows , this);
+      this.perPageLimit = options.perPageLimit || 20;
+
+      if (!this.params.limit) {
+        this.params.limit = this.perPageLimit;
+      }
+    },
+
+    urlRef: function(context, params) {
+      if (!context) { context = "server"; }
+      var query = "";
+
+      if (params) {
+        if (!_.isEmpty(params)) {
+          query = "?" + $.param(params);
+        } else {
+          query = '';
+        }
+      } else if (this.params) {
+        query = "?" + $.param(this.params);
+      }
+      
+      return FauxtonAPI.urls("allDocs", context, this.database.safeID(), query);
+    },
+
+    url: function () {
+      return this.urlRef.apply(this, arguments);
+    },
+
+    simple: function () {
+      var docs = this.map(function (item) {
+        return {
+          _id: item.id,
+          _rev: item.get('_rev'),
+        };
+      });
+
+      return new Documents.AllDocs(docs, {
+        database: this.database,
+        params: this.params
+      });
+    },
+
+    totalRows: function() {
+      return this.viewMeta.total_rows || "unknown";
+    },
+
+    decrementTotalRows: function () {
+      if (this.viewMeta.total_rows) {
+        this.viewMeta.total_rows = this.viewMeta.total_rows -1;
+        this.trigger('totalRows:decrement');
+      }
+    },
+
+    updateSeq: function() {
+      return this.viewMeta.update_seq || false;
+    },
+
+    parse: function(resp) {
+      var rows = resp.rows;
+
+      // remove any query errors that may return without doc info
+      // important for when querying keys on all docs
+      var cleanRows = _.filter(rows, function(row){
+        return row.value;
+      });
+
+      resp.rows = _.map(cleanRows, function(row){
+        return {
+          _id: row.id,
+          _rev: row.value.rev,
+          value: row.value,
+          key: row.key,
+          doc: row.doc || undefined
+        };
+      });
+
+      return PagingCollection.prototype.parse.call(this, resp);
+    },
+
+    clone: function () {
+      return new this.constructor(this.models, {
+        database: this.database,
+        params: this.params,
+        paging: this.paging
+      });
+    }
+  });
+
   Documents.IndexCollection = PagingCollection.extend({
     model: Documents.Doc,
     documentation: function(){
