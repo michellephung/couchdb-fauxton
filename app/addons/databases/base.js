@@ -33,5 +33,19 @@ function(app, FauxtonAPI, Databases, Views) {
     return ["/database/", dbname, "/_all_docs?limit=" + Databases.DocLimit].join('');
   };
 
+  FauxtonAPI.registerUrls("changes", {
+    server: function (id, query) {
+      return app.host + '/' + id + '/_changes' + query;
+
+    },
+    app: function (id, query) {
+      return "/database/" + id() + "/_changes" + query;
+    },
+
+    apiurl: function (id, query) {
+        return window.location.origin + "/" + id + "/_changes" + query;
+    }
+  });
+
   return Databases;
 });
