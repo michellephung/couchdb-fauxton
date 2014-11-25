@@ -52,7 +52,7 @@ function(app, FauxtonAPI, BaseRoute, Documents, Changes, Index, DocEditor, Datab
         route: "tempFn",
         roles: ['fx_loggedIn']
       },
-      "database/:database/_design/:ddoc/metadata": {
+      "database/:database/_design/:ddoc/_info": {
         route: "designDocMetadata",
         roles: ['fx_loggedIn']
       },
