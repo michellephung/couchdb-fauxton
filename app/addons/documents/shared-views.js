@@ -43,7 +43,7 @@ function(app, FauxtonAPI, Components, Documents, Databases) {
           newLinks = FauxtonAPI.getExtensions('sidebar:newLinks'),
           addLinks = FauxtonAPI.getExtensions('sidebar:links'),
           extensionList = FauxtonAPI.getExtensions('sidebar:list'),
-          databaseUrl = FauxtonAPI.urls("allDocs", "app", app.host, this.database.safeID(), '');
+          databaseUrl = FauxtonAPI.urls("allDocs", "app", this.database.safeID(), '');
 
       return {
         changes_url: '#' + this.database.url('changes'),
@@ -173,11 +173,9 @@ function(app, FauxtonAPI, Components, Documents, Databases) {
     serialize: function(){
       var ddocName = this.model.id.replace(/^_design\//,"");
       return{
-        database: this.collection.database,
+        designDocMetaUrl: FauxtonAPI.urls('designDocs', 'app', this.collection.database.safeID(), app.utils.removeSpecialCharacters(ddocName)),
         designDoc: ddocName,
         ddoc_clean: app.utils.removeSpecialCharacters(ddocName),
-        ddoc_encoded: app.utils.safeURLName(ddocName),
-        database_encoded: app.utils.safeURLName(this.model.database.id),
       };
     },
 
