@@ -39,7 +39,7 @@ function(app, FauxtonAPI, Databases, Views) {
 
     },
     app: function (id, query) {
-      return "/database/" + id() + "/_changes" + query;
+      return "/database/" + id + "/_changes" + query;
     },
 
     apiurl: function (id, query) {
