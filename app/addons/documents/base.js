@@ -33,5 +33,19 @@ function(app, FauxtonAPI, Documents) {
       }
   });
 
+  FauxtonAPI.registerUrls("designDocs", {
+    server: function (id, designDoc) {
+      return app.host + "/" + id + "/" + designDoc + '/_info';
+    },
+
+    apiurl: function (id, designDoc) {
+      return window.location.origin + "/" + id + "/" + designDoc + '/_info';
+    },
+
+    app: function (id, designDoc) {
+      return 'database/' + id + '/_design/' + app.utils.safeURLName(designDoc) + '/_info';
+    }
+  });
+
   return Documents;
 });
