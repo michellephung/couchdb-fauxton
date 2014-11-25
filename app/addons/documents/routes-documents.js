@@ -86,7 +86,7 @@ function(app, FauxtonAPI, BaseRoute, Documents, Changes, Index, DocEditor, Datab
     initViews: function (dbName) {
       this.databaseName = dbName;
       this.database = new Databases.Model({id: this.databaseName});
-      this.allDatabases = new Databases.List();
+      this.allDatabases = this.getAllDatabases();
 
       this.createDesignDocsCollection();
 
@@ -98,12 +98,17 @@ function(app, FauxtonAPI, BaseRoute, Documents, Changes, Index, DocEditor, Datab
       this.addSidebar();
     },
 
+    getAllDatabases: function () {
+      return new Databases.List();
+    },
+
     // this safely assumes the db name is valid
     onSelectDatabase: function (dbName) {
       this.cleanup();
       this.initViews(dbName);
 
-      FauxtonAPI.navigate('/database/' + app.utils.safeURLName(dbName) + '/_all_docs', {
+      var url = FauxtonAPI.urls('allDocs', 'app',  app.utils.safeURLName(dbName), '');
+      FauxtonAPI.navigate(url, {
         trigger: true
       });
 
