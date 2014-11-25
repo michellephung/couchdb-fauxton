@@ -244,13 +244,11 @@ function(app, FauxtonAPI, PagingCollection) {
     },
 
     url: function(context) {
-      if (context === "app") {
-        return this.database.url("app") + "/" + this.safeID() + '/_info';
-      } else if (context === "apiurl"){
-        return window.location.origin + "/" + this.database.safeID() + "/" + this.safeID() + '/_info';
-      } else {
-        return app.host + "/" + this.database.safeID() + "/" + this.safeID() + '/_info';
+      if (!context) {
+        context = 'server';
       }
+
+      return FauxtonAPI.urls('designDocs', context, this.database.safeID(), this.safeID());
     },
 
     // Need this to work around backbone router thinking _design/foo

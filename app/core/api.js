@@ -57,23 +57,35 @@ function(FauxtonAPI, Layout, Router, RouteObject, utils) {
 
   //This is a little rough and needs some improvement. But the basic concept is there
   FauxtonAPI.urls = function (name, context) {
-    var interceptors = FauxtonAPI.getExtensions('urls:interceptors')[0];
-    //if (_.isEmpty(interceptors)) { interceptors = function () { return false; };}
-    var args = Array.prototype.slice.call(arguments, 2);
+    var interceptors = FauxtonAPI.getExtensions('urls:interceptors');
+    var url;
 
-    var out = interceptors.apply(null, arguments);
+    var args = arguments;
+    _.first(interceptors, function (interceptor) {
+      var out = interceptor.apply(null, args);
 
-    if (out) { return out; }
+      if (out) {
+        url = out;
+        return true;
+      }
+      return false;
+    });
+    
+    if (!_.isUndefined(url)) { return url; }
 
-    if (!urlPaths[name][context]) {
-      console.trace();
-      console.log('could not find', name, context);
+    if (!urlPaths[name]) {
+      console.log('could not find name ', name);
+      return '';
     }
 
-    out = urlPaths[name][context].apply(null, args);
+    if (!urlPaths[name][context]) {
+      console.log('could not find context ', context);
+      return '';
+    }
 
-    console.log('normal url', out);
-    return out;
+    args = Array.prototype.slice.call(arguments, 2);
+    url = urlPaths[name][context].apply(null, args);
+    return url;
   };
 
 
