@@ -47,7 +47,7 @@ function(app, FauxtonAPI, Components, Documents, Databases) {
 
       return {
         changes_url: '#' + this.database.url('changes'),
-        permissions_url: '#' + this.collection.urlRef('app') + '/permissions',
+        permissions_url: '#' + this.database.url('app') + '/permissions',
         db_url: '#' + this.database.url('index'),
         database_url: '#' + databaseUrl,
         database: this.collection.database,
@@ -256,6 +256,8 @@ function(app, FauxtonAPI, Components, Documents, Databases) {
     },
 
     serialize: function() {
+      var href = FauxtonAPI.urls('view', 'app', this.database, this.ddoc);
+
       return {
         icon: this.indexTypeMap[this.selector].icon,
         urlFolder: this.indexTypeMap[this.selector].urlFolder,

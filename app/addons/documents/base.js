@@ -37,11 +37,11 @@ function(app, FauxtonAPI, Documents) {
     server: function (id, designDoc) {
       return app.host + '/' + id + '/' + designDoc + '/_info';
     },
-
+    
     app: function (id, designDoc) {
       return 'database/' + id + '/_design/' + app.utils.safeURLName(designDoc) + '/_info';
     },
-
+    
     apiurl: function (id, designDoc) {
       return window.location.origin + '/' + id + '/' + designDoc + '/_info';
     }
@@ -53,7 +53,7 @@ function(app, FauxtonAPI, Documents) {
     },
 
     app: function (id, designDoc) {
-      return 'database/' + id + '/_design/' + designDoc + '/_view/';
+      return 'database/' + id + '/_design/' + app.utils.safeURLName(designDoc) + '/_view/';
     },
 
     apiurl: function (id, designDoc, viewName) {
@@ -103,6 +103,7 @@ function(app, FauxtonAPI, Documents) {
     addSearch: function (database, ddoc) {
       return '/database/' + database + '/new_search/' + ddoc;
     }
+    
   });
 
   return Documents;
