@@ -21,30 +21,46 @@ define([
 
 function(app, FauxtonAPI, Documents) {
 
-  FauxtonAPI.registerUrls("allDocs", {
+  FauxtonAPI.registerUrls( 'allDocs', {
       server: function (id, query) {
-        return app.host + "/" + id + "/_all_docs" + query;
+        return app.host + '/' + id + '/_all_docs' + query;
       },
       app: function (id, query) {
-        return 'database/' + id + "/_all_docs" + query;
+        return 'database/' + id + '/_all_docs' + query;
       },
       apiurl: function (id, query) {
-        return window.location.origin + "/" + id + "/_all_docs" + query;
+        return window.location.origin + '/' + id + '/_all_docs' + query;
       }
   });
 
-  FauxtonAPI.registerUrls("designDocs", {
+  FauxtonAPI.registerUrls( 'designDocs', {
     server: function (id, designDoc) {
-      return app.host + "/" + id + "/" + designDoc + '/_info';
+      return app.host + '/' + id + '/' + designDoc + '/_info';
     },
-
+    
+    app: function (id, designDoc) {
+      return 'database/' + id + '/_design/' + app.utils.safeURLName(designDoc) + '/_info';
+    },
+    
     apiurl: function (id, designDoc) {
-      return window.location.origin + "/" + id + "/" + designDoc + '/_info';
+      return window.location.origin + '/' + id + '/' + designDoc + '/_info';
+    }
+    
+  });
+
+  FauxtonAPI.registerUrls( 'view', {
+    server: function (id, designDoc, viewName) {
+      return app.host + '/' + id + '/_design/' + designDoc + '/_view/' + viewName;
     },
 
     app: function (id, designDoc) {
-      return 'database/' + id + '/_design/' + app.utils.safeURLName(designDoc) + '/_info';
+      return 'database/' + id + '/_design/' + app.utils.safeURLName(designDoc) + '/_view/';
+    },
+
+    apiurl: function (id, designDoc, viewName) {
+      return window.location.origin + '/' + id + '/_design/' + designDoc + '/_view/' + viewName;
     }
+    
   });
 
   return Documents;

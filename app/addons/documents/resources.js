@@ -523,11 +523,18 @@ function(app, FauxtonAPI, PagingCollection) {
       } else if (context === "apiurl"){
         startOfUrl = window.location.origin;
       }
+
       var design = app.utils.safeURLName(this.design),
           view = app.utils.safeURLName(this.view);
 
-      var url = [startOfUrl, this.database.safeID(), "_design", design, this.idxType, view];
-      return url.join("/") + query;
+      var url = FauxtonAPI.urls('view', 'server', this.database.safeID(), design, view);      
+      
+      if (url === '') {
+        url = [startOfUrl, this.database.safeID(), '_design', design, this.idxType, view];
+        return url.join('/') + query;
+      } 
+
+      return url+query;
     },
 
     url: function () {
