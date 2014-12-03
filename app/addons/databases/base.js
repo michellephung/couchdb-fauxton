@@ -30,20 +30,44 @@ function(app, FauxtonAPI, Databases, Views) {
     var name = _.isObject(database) ? database.id : database,
         dbname = app.utils.safeURLName(name);
 
-    return ["/database/", dbname, "/_all_docs?limit=" + Databases.DocLimit].join('');
+    return ['/database/', dbname, '/_all_docs?limit=' + Databases.DocLimit].join('');
   };
 
-  FauxtonAPI.registerUrls("changes", {
+  FauxtonAPI.registerUrls('changes', {
     server: function (id, query) {
       return app.host + '/' + id + '/_changes' + query;
 
     },
     app: function (id, query) {
-      return "/database/" + id + "/_changes" + query;
+      return '/database/' + id + '/_changes' + query;
     },
 
     apiurl: function (id, query) {
-        return window.location.origin + "/" + id + "/_changes" + query;
+        return window.location.origin + '/' + id + '/_changes' + query;
+    }
+  });
+
+  FauxtonAPI.registerUrls('allDBs', {
+    server: function(id){
+      return '#/_all_dbs' ;
+    }
+  });
+
+  FauxtonAPI.registerUrls('databaseBaseURL', {
+    server: function(id){
+      return app.host + '/' + id ;
+    }
+  });
+
+  FauxtonAPI.registerUrls('permissions', {
+    server: function (id) {
+      return app.host + '/' + id + '/permissions';
+    },
+    app: function (id) {
+      return '/database/' + id + '/permissions';
+    },
+    apiurl: function (id) {
+      return window.location.origin + '/_api/v2/db/'+ id + '/_security' ;
     }
   });
 

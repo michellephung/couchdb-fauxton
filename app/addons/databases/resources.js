@@ -34,7 +34,7 @@ function(app, FauxtonAPI, Documents) {
     documentation: function () {
       return FauxtonAPI.constants.DOC_URLS.ALL_DBS;
     },
-    
+
     buildAllDocs: function(params) {
       this.allDocs = new Documents.AllDocs(null, {
         database: this,
@@ -50,6 +50,7 @@ function(app, FauxtonAPI, Documents) {
     },
 
     url: function(context) {
+//Fix this up
       if (context === "index") {
         return "/database/" + this.safeID() + "/_all_docs";
       } else if (context === "web-index") {

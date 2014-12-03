@@ -23,3 +23,4 @@ function(app, FauxtonAPI, Permissions) {
   return Permissions;
 });
 
+
