@@ -33,16 +33,6 @@ function(app, FauxtonAPI, Components, Documents, Databases, pouchdb, QueryOption
 
   var Views = {};
 
-
-  // this is a temporary workaround until I hear of a better on. The problem is that on initial page load (i.e. a refresh
-  // of the View page) the afterRender() functions calls a FauxtonAPI.triggerRouteEvent(). That causes this View to be
-  // rendered twice (at least, the afterRender() function then gets called twice) - and that causes the header content to
-  // disappear. This var tracks whether the View has been rendered and if not, doesn't call the triggerRouteEvent. btw,
-  // the reason the triggerRouteEvent('resetQueryOptions') code is there is that it ensures the Query Options tray shows
-  // the appropriate content for the current View (i.e. hasReduce or not)
-  var hasRenderedOnce = false;
-
-
   Views.ViewEditor = FauxtonAPI.View.extend({
     template: "addons/documents/templates/view_editor",
     builtinReduces: ['_sum', '_count', '_stats'],
@@ -435,7 +425,7 @@ function(app, FauxtonAPI, Components, Documents, Databases, pouchdb, QueryOption
         designDocs.reset(filteredModels, {silent: true});
       }
 
-      if (!this.designDocSelector) { 
+      if (!this.designDocSelector) {
         this.designDocSelector = this.setView('.design-doc-group', new Views.DesignDocSelector({
           collection: designDocs,
           ddocName: this.currentDdoc || this.model.id,
@@ -454,7 +444,11 @@ function(app, FauxtonAPI, Components, Documents, Databases, pouchdb, QueryOption
     },
 
     afterRender: function() {
-      if (this.params && !this.newView && hasRenderedOnce) {
+
+      var queryOptionsMissing = $("#query-options").html() === "";
+
+      if (this.params && !this.newView && queryOptionsMissing) {
+
         FauxtonAPI.triggerRouteEvent('resetQueryOptions', {
           queryParams: this.params,
           hasReduce: this.hasReduce(),
@@ -473,8 +467,6 @@ function(app, FauxtonAPI, Components, Documents, Databases, pouchdb, QueryOption
         this.$('#index-nav').parent().removeClass('active');
       }
 
-      // note that this View has been rendered
-      hasRenderedOnce = true;
     },
 
     showEditors: function () {
@@ -567,7 +559,7 @@ function(app, FauxtonAPI, Components, Documents, Databases, pouchdb, QueryOption
         };
         var ddoc = new this.DocModel(doc, {database: this.database});
         return ddoc;
-      } 
+      }
 
       var ddocName = this.$('#ddoc').val();
       return this.collection.find(function (ddoc) {
