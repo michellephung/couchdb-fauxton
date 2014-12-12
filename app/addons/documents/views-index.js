@@ -32,6 +32,7 @@ define([
 function(app, FauxtonAPI, Components, Documents, Databases, pouchdb, QueryOptions, resizeColumns, beautify) {
 
   var Views = {};
+  var hasRenderedOnce = false;  //added for viewing
 
   Views.ViewEditor = FauxtonAPI.View.extend({
     template: "addons/documents/templates/view_editor",
@@ -445,10 +446,9 @@ function(app, FauxtonAPI, Components, Documents, Databases, pouchdb, QueryOption
 
     afterRender: function() {
 
-      var queryOptionsMissing = $("#query-options").html() === "";
-
-      if (this.params && !this.newView && queryOptionsMissing) {
-
+      //var queryOptionsMissing = $("#query-options").html() === "";
+      //if (this.params && !this.newView && queryOptionsMissing) {
+      if (this.params && !this.newView && hasRenderedOnce) {  //changed
         FauxtonAPI.triggerRouteEvent('resetQueryOptions', {
           queryParams: this.params,
           hasReduce: this.hasReduce(),
@@ -466,6 +466,11 @@ function(app, FauxtonAPI, Components, Documents, Databases, pouchdb, QueryOption
         this.$('#index').hide();
         this.$('#index-nav').parent().removeClass('active');
       }
+
+      // note that this View has been rendered
+      hasRenderedOnce = true;     //added for viewing
+
+      console.log("hasRenderedOnce", hasRenderedOnce);  //added for viewing
 
     },
 
