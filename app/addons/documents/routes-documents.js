@@ -111,7 +111,7 @@ function(app, FauxtonAPI, Documents, Changes, Index, DocEditor, Databases, Resou
 
       this.footer = this.setView("#footer", new Documents.Views.Footer());
 
-      this.designDocs = new Documents.AllDocs(null, {
+      this.designDocs = new Resources.AllDocs(null, {
         database: this.database,
         paging: {
           pageSize: 500
@@ -501,6 +501,7 @@ function(app, FauxtonAPI, Documents, Changes, Index, DocEditor, Databases, Resou
 
     paginate: function (options) {
       var collection = this.documentsView.collection;
+      this.documentsView.collection.reset(collection);
 
       this.documentsView.forceRender();
       collection.paging.pageSize = options.perPage;
