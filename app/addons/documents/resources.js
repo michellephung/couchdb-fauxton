@@ -52,7 +52,7 @@ function(app, FauxtonAPI, PagingCollection) {
     url: function(context) {
 
       if(context === undefined){
-        context = 'server'
+        context = 'server';
       }
       return FauxtonAPI.urls('document', context, this.getDatabase().safeID(), this.safeID());
     },
@@ -500,12 +500,13 @@ function(app, FauxtonAPI, PagingCollection) {
         startOfUrl = window.location.origin;
       }
 
-      var design = app.utils.safeURLName(this.design),
+      var database = this.database.safeID(),
+          design = app.utils.safeURLName(this.design),
           view = app.utils.safeURLName(this.view),
-          url = FauxtonAPI.urls('view', 'server', this.database.safeID(), design, view);
+          url = FauxtonAPI.urls('view', 'server', database, design, view);
 
       if (url === '') {
-        url = [startOfUrl, this.database.safeID(), '_design', design, this.idxType, view];
+        url = [startOfUrl, database, '_design', design, this.idxType, view];
         return url.join('/') + query;
       }
 
