@@ -50,15 +50,11 @@ function(app, FauxtonAPI, PagingCollection) {
       return FauxtonAPI.constants.DOC_URLS.GENERAL;
     },
     url: function(context) {
-      if (context === "app") {
-        return this.getDatabase().url("app") + "/" + this.safeID();
-      } else if (context === "web-index") {
-        return this.getDatabase().url("app") + "/" + app.utils.safeURLName(this.id);
-      } else if (context === "apiurl"){
-        return window.location.origin + "/" + this.getDatabase().safeID() + "/" + this.safeID();
-      } else {
-        return app.host + "/" + this.getDatabase().safeID() + "/" + this.safeID();
+
+      if(context === undefined){
+        context = 'server'
       }
+      return FauxtonAPI.urls('document', context, this.getDatabase().safeID(), this.safeID());
     },
 
     initialize: function(_attrs, options) {
