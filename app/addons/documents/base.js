@@ -53,7 +53,7 @@ function(app, FauxtonAPI, Documents) {
     },
 
     app: function (id, designDoc) {
-      return 'database/' + id + '/_design/' + app.utils.safeURLName(designDoc) + '/_view/';
+      return 'database/' + id + '/_design/' + designDoc + '/_view/';
     },
 
     apiurl: function (id, designDoc, viewName) {
@@ -103,21 +103,36 @@ function(app, FauxtonAPI, Documents) {
     addSearch: function (database, ddoc) {
       return '/database/' + database + '/new_search/' + ddoc;
     }
-    
+
+  });
+
+  FauxtonAPI.registerUrls( 'search', {
+    server: function (id, designDoc, searchName) {
+      return app.host + '/' + id + '/_design/' + designDoc + '/_search/' + searchName;
+    },
+
+    app: function (id, designDoc) {
+      return 'database/' + id + '/_design/' + designDoc + '/_search/';
+    },
+
+    apiurl: function (id, designDoc, searchName) {
+      return window.location.origin + '/' + id + '/_design/' + designDoc + '/_search/' + searchName;
+    }
+
   });
 
   FauxtonAPI.registerUrls( 'permissions', {
-      server: function (id) {
-        return app.host + '/database/' + id  + '/permissions';
-      },
+    server: function (id) {
+      return app.host + '/database/' + id  + '/permissions';
+    },
 
-      app: function (id) {
-        return 'database/' + id;
-      },
+    app: function (id) {
+      return 'database/' + id;
+    },
 
-      apiurl: function (id) {
-        return window.location.origin + '/_api/v2/db/'+ id + '/_security' ;
-      }
+    apiurl: function (id) {
+      return window.location.origin + '/_api/v2/db/'+ id + '/_security' ;
+    }
 
   });
 

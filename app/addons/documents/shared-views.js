@@ -256,8 +256,6 @@ function(app, FauxtonAPI, Components, Documents, Databases) {
     },
 
     serialize: function() {
-      var href = FauxtonAPI.urls('view', 'app', this.database, this.ddoc);
-
       return {
         icon: this.indexTypeMap[this.selector].icon,
         urlFolder: this.indexTypeMap[this.selector].urlFolder,
