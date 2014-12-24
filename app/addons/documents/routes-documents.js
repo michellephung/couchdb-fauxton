@@ -121,6 +121,51 @@ function(app, FauxtonAPI, BaseRoute, Documents, Changes, Index, DocEditor, Datab
       this.listenTo(FauxtonAPI.Events, 'lookaheadTray:update', this.onSelectDatabase);
     },
 
+    setUpDropdown: function() {
+      var defaultMenuLinks = [{
+        links: [{
+          title: 'Replicate Database',
+          icon: 'fonticon-replicate',
+          url: '#/replication/' + this.databaseName
+        },{
+          title: 'Delete',
+          icon: 'fonticon-trash',
+          trigger: 'database:delete'
+        }]
+      }];
+
+      defaultMenuLinks.push({
+        title: 'Add new',
+        links: this.getExtensionLinks()
+      });
+
+      return defaultMenuLinks;
+    },
+
+    getExtensionLinks: function () { //these are the links for the cog
+
+      var database = this.database.id;
+
+      var menuLinks = [{
+          title: 'New Doc',
+          url: FauxtonAPI.urls('new', 'newDocument', database),
+          icon: 'fonticon-plus-circled'
+        },{
+          title: 'New View',
+          url: FauxtonAPI.urls('new', 'newView', database),
+          icon: 'fonticon-plus-circled'
+      }];
+
+      return _.reduce(FauxtonAPI.getExtensions('sidebar:links'), function (menuLinks, link) {
+        menuLinks.push({
+          title: link.title,
+          url: FauxtonAPI.urls('new', 'newSearch', database),
+          icon: 'fonticon-plus-circled'
+        });
+        return menuLinks;
+      }, menuLinks);
+    },
+
     designDocMetadata: function (database, ddoc) {
       this.footer && this.footer.remove();
       this.toolsView && this.toolsView.remove();
