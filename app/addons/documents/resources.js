@@ -505,16 +505,15 @@ function(app, FauxtonAPI, PagingCollection) {
       }
 
       var design = app.utils.safeURLName(this.design),
-          view = app.utils.safeURLName(this.view);
+          view = app.utils.safeURLName(this.view),
+          url = FauxtonAPI.urls('view', 'server', this.database.safeID(), design, view);
 
-      var url = FauxtonAPI.urls('view', 'server', this.database.safeID(), design, view);      
-      
       if (url === '') {
         url = [startOfUrl, this.database.safeID(), '_design', design, this.idxType, view];
         return url.join('/') + query;
-      } 
+      }
 
-      return url+query;
+      return url + query;
     },
 
     url: function () {
