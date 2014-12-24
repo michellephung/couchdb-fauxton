@@ -45,7 +45,6 @@ function(app, FauxtonAPI, Components, Documents, Databases) {
           extensionList = FauxtonAPI.getExtensions('sidebar:list'),
           databaseUrl = FauxtonAPI.urls("allDocs", "app", this.database.safeID(), '');
 
-          console.log(FauxtonAPI.urls('permissions', 'server', this.database.safeID()));
       return {
         changes_url: '#' + this.database.url('changes'),
         permissions_url: '#' + FauxtonAPI.urls('permissions', 'app', this.database.safeID())+ '/permissions',
