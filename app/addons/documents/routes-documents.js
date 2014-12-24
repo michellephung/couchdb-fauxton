@@ -142,7 +142,7 @@ function(app, FauxtonAPI, BaseRoute, Documents, Changes, Index, DocEditor, Datab
       return defaultMenuLinks;
     },
 
-    getExtensionLinks: function () { //these are the links for the cog
+    getExtensionLinks: function () { //these are the '+' links for the cog
 
       var database = this.database.id;
 
