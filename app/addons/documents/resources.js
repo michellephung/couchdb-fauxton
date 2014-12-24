@@ -51,8 +51,13 @@ function(app, FauxtonAPI, Documents, PagingCollection) {
     },
     url: function(context) {
 
+<<<<<<< HEAD
       if (context === undefined) {
         context = 'server';
+=======
+      if(context === undefined){
+        context = 'server'
+>>>>>>> replaces urls for doc cards
       }
       return FauxtonAPI.urls('document', context, this.getDatabase().safeID(), this.safeID());
     },
