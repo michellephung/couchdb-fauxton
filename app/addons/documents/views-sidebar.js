@@ -59,27 +59,27 @@ function(app, FauxtonAPI, Components, Documents, Databases) {
       };
     },
 
-    getNewButtonLinks: function () {
+    getNewButtonLinks: function () {  //these are links for the sidebar '+' on All Docs and All Design Docs
       var database = this.collection.database,
-          newurlPrefix = "#" + database.url('app'),
-          addLinks = FauxtonAPI.getExtensions('sidebar:links');
+          addLinks = FauxtonAPI.getExtensions('sidebar:links'),
+          databaseName = database.id;
 
-      return _.reduce(FauxtonAPI.getExtensions('sidebar:links'), function (menuLinks, link) {
+      return _.reduce(addLinks, function (menuLinks, link) {
 
         menuLinks.push({
           title: link.title,
-          url: newurlPrefix + "/" + link.url,
+          url: FauxtonAPI.urls('new', 'newSearch', databaseName),
           icon: 'fonticon-plus-circled'
         });
 
-        return menuLinks; 
+        return menuLinks;
      }, [{
           title: 'New Doc',
-          url: newurlPrefix + '/new',
+          url: FauxtonAPI.urls('new', 'newDocument', databaseName),
           icon: 'fonticon-plus-circled'
         },{
           title: 'New View',
-          url: newurlPrefix + '/new_view',
+          url: FauxtonAPI.urls('new', 'newView', databaseName),
           icon: 'fonticon-plus-circled'
         }]);
     },
@@ -172,31 +172,34 @@ function(app, FauxtonAPI, Components, Documents, Databases) {
     },
 
     serialize: function(){
-      var ddocName = this.model.id.replace(/^_design\//,"");
+      var ddocName = this.model.id.replace(/^_design\//,""),
+          docSafe = app.utils.safeURLName(ddocName),
+          databaseName = this.collection.database.safeID();
+
       return{
-        designDocMetaUrl: FauxtonAPI.urls('designDocs', 'app', this.collection.database.safeID(), app.utils.removeSpecialCharacters(ddocName)),
+        designDocMetaUrl: FauxtonAPI.urls('designDocs', 'app', databaseName, docSafe),
         designDoc: ddocName,
-        ddoc_clean: app.utils.removeSpecialCharacters(ddocName),
+        ddoc_clean: docSafe,
       };
     },
 
-    getSidebarLinks: function () {
+    getSidebarLinks: function () {  //these are for each Design doc '+' links
       var ddocName = this.model.id.replace(/^_design\//,""),
-          docSafe = app.utils.safeURLName(ddocName), 
-          database = this.collection.database;
+          docSafe = app.utils.safeURLName(ddocName),
+          databaseName = this.collection.database.id;
 
       return _.reduce(FauxtonAPI.getExtensions('sidebar:links'), function (menuLinks, link) {
 
         menuLinks.push({
           title: link.title,
-          url: "#" + database.url('app') + "/" + link.url + "/" + docSafe,
+          url: "#" + FauxtonAPI.urls('new', 'addSearch', databaseName, docSafe),
           icon: 'fonticon-plus-circled'
         });
 
-        return menuLinks; 
+        return menuLinks;
      }, [{
       title: 'New View',
-      url: "#" + database.url('app') + "/new_view/" + docSafe,
+      url: "#" + FauxtonAPI.urls('new', 'addView', databaseName, docSafe),
       icon: 'fonticon-plus-circled'
      }]);
 

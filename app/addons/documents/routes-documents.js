@@ -185,24 +185,24 @@ function(app, FauxtonAPI, Documents, Changes, Index, DocEditor, Databases, Resou
       return defaultMenuLinks;
     },
 
-    getExtensionLinks: function () {
-      var database = this.database,
-          newurlPrefix = "#" + database.url('app');
+    getExtensionLinks: function () { //these are the links for the cog
+
+      var database = this.database.id;
 
       var menuLinks = [{
           title: 'New Doc',
-          url: newurlPrefix + '/new',
+          url: FauxtonAPI.urls('new', 'newDocument', database),
           icon: 'fonticon-plus-circled'
         },{
           title: 'New View',
-          url: newurlPrefix + '/new_view',
+          url: FauxtonAPI.urls('new', 'newView', database),
           icon: 'fonticon-plus-circled'
       }];
 
       return _.reduce(FauxtonAPI.getExtensions('sidebar:links'), function (menuLinks, link) {
         menuLinks.push({
           title: link.title,
-          url: newurlPrefix + "/" + link.url,
+          url: FauxtonAPI.urls('new', 'newSearch', database),
           icon: 'fonticon-plus-circled'
         });
         return menuLinks;
