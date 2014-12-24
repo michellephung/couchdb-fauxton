@@ -145,7 +145,12 @@ function(app, FauxtonAPI, BaseRoute, Documents, Changes, Index, DocEditor, Datab
       return defaultMenuLinks;
     },
 
+<<<<<<< HEAD
     getExtensionLinks: function () { //these are the '+' links for the cog
+=======
+    getExtensionLinks: function () { //these are the links for the cog
+
+>>>>>>> get sidebar links from registerUrls('new') in base.js
       var database = this.database.id;
 
       var menuLinks = [{
