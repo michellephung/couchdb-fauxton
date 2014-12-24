@@ -247,14 +247,12 @@ function(app, FauxtonAPI, Components, Documents, Databases) {
       this.name = options.name;
 
       this.indexTypeMap = {
-        views:   { icon: 'fonticon-sidenav-map-reduce', urlFolder: '_view' },
-        indexes: { icon: 'fonticon-sidenav-search', urlFolder: '_indexes' }
+        views:   { icon: 'fonticon-sidenav-map-reduce', urlFolder: '_view', type: 'view' },
+        indexes: { icon: 'fonticon-sidenav-search', urlFolder: '_indexes', type: 'search' }
       };
     },
 
     serialize: function() {
-      var href = FauxtonAPI.urls('view', 'app', this.database, this.ddoc);
-
       return {
         icon: this.indexTypeMap[this.selector].icon,
         urlFolder: this.indexTypeMap[this.selector].urlFolder,
@@ -264,8 +262,8 @@ function(app, FauxtonAPI, Components, Documents, Databases) {
         ddoc: this.ddoc,
         database: this.database,
         selected: this.selected,
-        collection: this.collection, 
-        href: href
+        collection: this.collection,
+        href: FauxtonAPI.urls(this.indexTypeMap[this.selector].type, 'app', this.database, this.ddoc)
       };
     },
 
