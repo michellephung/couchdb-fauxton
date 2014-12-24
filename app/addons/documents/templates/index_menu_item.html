@@ -19,10 +19,10 @@ the License.
   <ul class="accordion-body collapse" id="<%- removeSpecialCharacters(ddoc) + ddocType %>">
   <% _.each(collection, function (item, index) { %>
   <li>
-  <a 
-    data-ddoctype="<%- ddocType %>" 
-    id="<%- removeSpecialCharacters(ddoc) %>_<%- removeSpecialCharacters(index) %>" 
-    href="#/<%- href%><%- index%>" 
+  <a
+    data-ddoctype="<%- ddocType %>"
+    id="<%- removeSpecialCharacters(ddoc) %>_<%- removeSpecialCharacters(index) %>"
+    href="#/<%- href%><%- index%>"
     class="toggle-view">
     <%- index %>
   </a>
