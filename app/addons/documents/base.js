@@ -78,6 +78,25 @@ function(app, FauxtonAPI, Documents) {
 
   });
 
+  FauxtonAPI.registerUrls( 'document', {
+    server: function (database, doc) {
+      return app.host + '/' + database + '/' + doc;
+    },
+
+    app: function (database, doc) {
+      return '/database/' + database + '/' + doc;
+    },
+
+    apiurl: function (database, doc) {
+      return window.location.origin + '/' + database + '/' + doc;
+    },
+
+    'web-index': function (database, doc) {
+      return '/database/' + database + '/' + doc;
+    }
+
+  });
+
 
   return Documents;
 });
