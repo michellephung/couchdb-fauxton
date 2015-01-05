@@ -50,6 +50,10 @@ function(app, FauxtonAPI, Documents, PagingCollection) {
       return FauxtonAPI.constants.DOC_URLS.GENERAL;
     },
     url: function(context) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> add quotes to get correct params for design docs
       if (context === undefined) {
         context = 'server';
       }
