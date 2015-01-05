@@ -51,7 +51,7 @@ function(app, FauxtonAPI, Documents, PagingCollection) {
     },
     url: function(context) {
 
-      if(context === undefined){
+      if (context === undefined) {
         context = 'server';
       }
       return FauxtonAPI.urls('document', context, this.getDatabase().safeID(), this.safeID());

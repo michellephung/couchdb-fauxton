@@ -87,7 +87,6 @@ function(app, FauxtonAPI, BaseRoute, Documents, Changes, Index, DocEditor, Datab
       this.databaseName = dbName;
       this.database = new Databases.Model({id: this.databaseName});
       this.allDatabases = this.getAllDatabases();
-
       this.createDesignDocsCollection();
 
       this.rightHeader = this.setView("#right-header", new Documents.Views.RightAllDocsHeader({
