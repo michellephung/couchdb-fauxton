@@ -224,7 +224,7 @@ function (app, FauxtonAPI, Components, Documents, Databases, prettify) {
       // we copy/pasted the url into the browser or came from
       // creating a document with "/new" in the end of the path
       if (lastPages.length < 2 || /\/new$/.test(lastPages[0])) {
-        FauxtonAPI.navigate(this.database.url('index') + '?limit=100');
+        FauxtonAPI.navigate(FauxtonAPI.urls('allDocs', 'app', this.database.id, '?limit=1000'));
       } else {
         window.history.back();
       }
@@ -391,7 +391,7 @@ function (app, FauxtonAPI, Components, Documents, Databases, prettify) {
 
         this.model.save().then(function () {
           editor.editSaved();
-          FauxtonAPI.navigate('/database/' + that.database.safeID() + '/' + that.model.id);
+          FauxtonAPI.navigate(FauxtonAPI.urls('document', 'app', that.database.safeID(), that.model.id));
         }).fail(function (xhr) {
           var responseText = JSON.parse(xhr.responseText).reason;
           FauxtonAPI.addNotification({
