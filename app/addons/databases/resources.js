@@ -29,14 +29,12 @@ function(app, FauxtonAPI, Documents) {
       this.status = new Databases.Status({
         database: this
       });
-      this.databaseObject = this.id;
-      console.log("this.id from Databases.Model", this.id);
     },
 
     documentation: function () {
       return FauxtonAPI.constants.DOC_URLS.ALL_DBS;
     },
-    
+
     buildAllDocs: function(params) {
       this.allDocs = new Documents.AllDocs(null, {
         database: this,

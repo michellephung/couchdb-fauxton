@@ -186,7 +186,6 @@ function(app, FauxtonAPI, Documents, Changes, Index, DocEditor, Databases, Resou
     },
 
     getExtensionLinks: function () { //these are the '+' links for the cog
-
       var database = this.database.id;
 
       var menuLinks = [{
