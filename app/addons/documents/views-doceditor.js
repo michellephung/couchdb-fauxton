@@ -224,7 +224,7 @@ function (app, FauxtonAPI, Components, Documents, Databases, prettify) {
       // we copy/pasted the url into the browser or came from
       // creating a document with "/new" in the end of the path
       if (lastPages.length < 2 || /\/new$/.test(lastPages[0])) {
-        FauxtonAPI.navigate(FauxtonAPI.urls('allDocs', 'app', this.database.id, '?limit=1000'));
+        FauxtonAPI.navigate(FauxtonAPI.urls('allDocs', 'app', this.database.id, '?limit=100'));
       } else {
         window.history.back();
       }

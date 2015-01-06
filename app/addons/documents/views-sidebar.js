@@ -39,6 +39,7 @@ function(app, FauxtonAPI, Components, Documents, Databases) {
     },
 
     serialize: function() {
+      console.log("serialize", this.collection.database.id);
       var docLinks = FauxtonAPI.getExtensions('docLinks'),
           newLinks = FauxtonAPI.getExtensions('sidebar:newLinks'),
           addLinks = FauxtonAPI.getExtensions('sidebar:links'),
@@ -46,6 +47,7 @@ function(app, FauxtonAPI, Components, Documents, Databases) {
           databaseUrl = FauxtonAPI.urls("allDocs", "app", this.database.safeID(), '');
 
       return {
+        xxx:"hello there",
         changes_url: '#' + this.database.url('changes'),
         permissions_url: '#' + FauxtonAPI.urls('permissions', 'app', this.database.safeID())+ '/permissions',
         db_url: '#' + this.database.url('index'),
