@@ -29,6 +29,8 @@ function(app, FauxtonAPI, Documents) {
       this.status = new Databases.Status({
         database: this
       });
+      this.databaseObject = this.id;
+      console.log("this.id from Databases.Model", this.id);
     },
 
     documentation: function () {
@@ -50,6 +52,7 @@ function(app, FauxtonAPI, Documents) {
     },
 
     url: function(context) {
+//Fix this up
       if (context === "index") {
         return "/database/" + this.safeID() + "/_all_docs";
       } else if (context === "web-index") {
