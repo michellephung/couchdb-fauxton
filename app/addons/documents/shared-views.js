@@ -47,7 +47,7 @@ function(app, FauxtonAPI, Components, Documents, Databases) {
 
       return {
         changes_url: '#' + this.database.url('changes'),
-        permissions_url: '#' + FauxtonAPI.urls('permissions', 'app', this.database.safeID())+ '/permissions',
+        permissions_url: '#' + FauxtonAPI.urls('permissions', 'app', this.database.safeID()) + '/permissions',
         db_url: '#' + this.database.url('index'),
         database_url: '#' + databaseUrl,
         database: this.collection.database,
