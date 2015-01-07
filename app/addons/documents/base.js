@@ -105,20 +105,5 @@ function(app, FauxtonAPI, Documents) {
     }
   });
 
-  //will put this into permissions folder later
-  FauxtonAPI.registerUrls( 'permissions', {
-    server: function (id) {
-      return app.host + '/database/' + id  + '/permissions';
-    },
-
-    app: function (id) {
-      return 'database/' + id;
-    },
-
-    apiurl: function (id) {
-      return window.location.origin + '/_api/v2/db/'+ id + '/_security' ;
-    }
-  });
-
   return Documents;
 });
