@@ -58,6 +58,10 @@ function(app, FauxtonAPI, Documents) {
 
     apiurl: function (id, designDoc, viewName) {
       return window.location.origin + '/' + id + '/_design/' + designDoc + '/_view/' + viewName;
+    },
+
+    showNewlySavedView: function (database, designDocs, viewName) {
+      return '/database/' + database +'/' + designDocs + '/_view/' + viewName;
     }
   });
 
@@ -100,7 +104,6 @@ function(app, FauxtonAPI, Documents) {
       return '/database/' + database + '/new_search/' + ddoc;
     }
   });
-
 
   return Documents;
 });
