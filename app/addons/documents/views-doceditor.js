@@ -247,8 +247,8 @@ function (app, FauxtonAPI, Components, Documents, Databases, prettify) {
           msg: 'Your document has been successfully deleted.',
           clear: true
         });
-        FauxtonAPI.navigate(database.url('index'));
-      }, function () {
+        FauxtonAPI.navigate(FauxtonAPI.urls('allDocs', 'app', database.id, '?limit=20'));
+      }, function (resp) {
         FauxtonAPI.addNotification({
           msg: 'Failed to delete your document!',
           type: 'error',
