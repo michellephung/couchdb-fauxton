@@ -302,7 +302,7 @@ function (app, FauxtonAPI, Components, Documents, Databases, prettify) {
           msg: 'Succesfully deleted your doc',
           clear:  true
         });
-        FauxtonAPI.navigate(database.url('index'));
+        FauxtonAPI.navigate(FauxtonAPI.urls('allDocs', 'app', database.id, '?limit=20'));
       }, function (resp) {
         FauxtonAPI.addNotification({
           msg: 'Failed to delete your doc!',
