@@ -43,12 +43,15 @@ function(app, FauxtonAPI, Components, Documents, Databases) {
           newLinks = FauxtonAPI.getExtensions('sidebar:newLinks'),
           addLinks = FauxtonAPI.getExtensions('sidebar:links'),
           extensionList = FauxtonAPI.getExtensions('sidebar:list'),
-          databaseUrl = FauxtonAPI.urls("allDocs", "app", this.database.safeID(), '');
+          safeDatabaseName = this.database.safeID(),
+          changesLink = FauxtonAPI.urls('changes', 'app', safeDatabaseName, ''),
+          permissionsLink = FauxtonAPI.urls('permissions', 'app', safeDatabaseName),
+          databaseUrl = FauxtonAPI.urls('allDocs', 'app', safeDatabaseName, '');
 
       return {
-        changes_url: '#' + this.database.url('changes'),
-        permissions_url: '#' + this.database.url('app') + '/permissions',
-        db_url: '#' + this.database.url('index'),
+        changes_url: changesLink,
+        permissions_url: permissionsLink,
+        db_url: FauxtonAPI.urls('allDocs', 'server', safeDatabaseName, ''),
         database_url: '#' + databaseUrl,
         database: this.collection.database,
         docLinks: docLinks,
