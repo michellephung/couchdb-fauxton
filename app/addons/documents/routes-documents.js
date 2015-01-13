@@ -544,7 +544,7 @@ function(app, FauxtonAPI, BaseRoute, Documents, Changes, Index, DocEditor, Datab
       this.rightHeader.hideQueryOptions();
 
       this.apiUrl = function () {
-        return [this.database.url("changes-apiurl"), this.database.documentation()];
+        return [FauxtonAPI.urls('changes', 'apiurl', this.database.id, ''), this.database.documentation()];
       };
     },
 
