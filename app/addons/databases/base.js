@@ -65,6 +65,9 @@ function(app, FauxtonAPI, Databases, Views) {
     },
     app: function (id) {
       return '/database/' + id + '/permissions';
+    },
+    apiurl: function (id) {
+      return window.location.origin + '/_api/v2/db/'+ id + '/_security' ;
     }
   });
 
