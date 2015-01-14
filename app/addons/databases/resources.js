@@ -64,7 +64,7 @@ function(app, FauxtonAPI, Documents) {
       } else if (context === "app") {
         return "/database/" + this.safeID();
       } else {
-        return app.host + "/" + this.safeID();
+        return app.host + "/" + this.safthis.safeID();
       }
     },
     safeName: function(){
