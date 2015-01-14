@@ -129,7 +129,7 @@ function(app, FauxtonAPI, BaseRoute, Documents, Changes, Index, DocEditor, Datab
         links: [{
           title: 'Replicate Database',
           icon: 'fonticon-replicate',
-          url: '#/replication/' + this.databaseName
+          url: FauxtonAPI.urls('replication', 'app', this.databaseName)
         },{
           title: 'Delete',
           icon: 'fonticon-trash',
