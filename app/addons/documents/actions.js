@@ -116,6 +116,9 @@ function (app, FauxtonAPI, Documents, ActionTypes) {
             clear: true
           });
 
+          var editor = viewInfo.mapEditor;
+          editor.editSaved();
+
           if (_.any([viewInfo.designDocChanged, viewInfo.newDesignDoc, viewInfo.newView])) {
             var fragment = '/database/' + 
               viewInfo.database.safeID() +

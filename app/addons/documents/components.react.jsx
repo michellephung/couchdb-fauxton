@@ -393,7 +393,8 @@ function(app, FauxtonAPI, React, Stores, Actions, Components) {
         designDocChanged: this.state.hasDesignDocChanged,
         map: this.refs.mapEditor.getMapValue(),
         reduce: this.refs.reduceEditor.getReduceValue(),
-        designDocs: this.state.designDocs
+        designDocs: this.state.designDocs,
+        mapEditor: this.refs['mapEditor'].getEditor()
       });
     },
 
