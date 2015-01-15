@@ -101,10 +101,6 @@ function(app, FauxtonAPI, BaseRoute, Documents, Changes, Index, DocEditor, Datab
       return new Databases.List();
     },
 
-    getAllDatabases: function () {
-      return new Databases.List();
-    },
-
     // this safely assumes the db name is valid
     onSelectDatabase: function (dbName) {
       this.cleanup();
