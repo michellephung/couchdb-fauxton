@@ -66,7 +66,7 @@ define([
       var params = {
         collection: this.designDocs,
         database: this.database,
-        isSystemDatabaseModel: new Databases.IsSystemDatabaseModel({name: this.database.get('id')})
+  //      isSystemDatabaseModel: new Databases.IsSystemDatabaseModel({name: this.database.get('id')})
       };
       if (selectedTab) {
         params.selectedTab = selectedTab;
