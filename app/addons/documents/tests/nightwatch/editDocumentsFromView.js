@@ -37,7 +37,7 @@ module.exports = {
       .clickWhenVisible('#nav-design-function-abcviews')
       .clickWhenVisible('#abc_evens')
 
-      .waitForElementPresent('a[href="#/database/fauxton-selenium-tests/document_10"]', waitTime, false)
+      .waitForElementVisible('a[href="#/database/fauxton-selenium-tests/document_10"]', waitTime, false)
       .click('a[href="#/database/fauxton-selenium-tests/document_10"]')
 
       //navigated to editor
