@@ -20,50 +20,26 @@ define([
 function (app, FauxtonAPI, Activetasks, Views) {
 
   var ActiveTasksRouteObject = FauxtonAPI.RouteObject.extend({
-    layout: 'with_tabs_sidebar',
-
-    routes: {
-      'activetasks/:id': 'defaultView',
-      'activetasks': 'defaultView'
-    },
-
-    events: {
-      'route:changeFilter': 'changeFilter'
-    },
-
     selectedHeader: 'Active Tasks',
-
+    layout: 'with_tabs_sidebar',
+    routes: {
+      'activetasks/:id': 'showActiveTasks',
+      'activetasks': 'showActiveTasks'
+    },
     crumbs: [
       {'name': 'Active tasks', 'link': 'activetasks'}
     ],
-
     apiUrl: function () {
-      return [this.allTasks.url('apiurl'), this.allTasks.documentation];
+      var apiurl = window.location.origin + '/_active_tasks';
+      return [ apiurl, FauxtonAPI.constants.DOC_URLS.ACTIVE_TASKS];
     },
-
     roles: ['_admin'],
-
     initialize: function () {
       this.allTasks = new Activetasks.AllTasks();
-      this.search = new Activetasks.Search();
     },
-
-    defaultView: function () {
-      this.setView('#dashboard-lower-content', new Views.View({
-        collection: this.allTasks,
-        currentView: 'all',
-        searchModel: this.search
-      }));
-
-      this.setView('#sidebar-content', new Views.TabMenu({}));
-
-      this.headerView = this.setView('#dashboard-upper-content', new Views.TabHeader({
-        searchModel: this.search
-      }));
-    },
-
-    changeFilter: function (filterType) {
-      this.search.set('filterType', filterType);
+    showActiveTasks: function () {
+      this.activeTasksSection = this.setView('#dashboard-content', new Views.ActiveTasksWrapper({collection: this.allTasks}));
+      this.sidebar = this.setView('#sidebar-content', new Views.ActiveTasksSidebar({}));
     }
   });
 

@@ -13,223 +13,49 @@
 define([
   'app',
   'api',
-  'addons/activetasks/resources'
+  'addons/activetasks/resources',
+  'addons/activetasks/components.react',
+  'addons/activetasks/actions'
 ],
 
-function (app, FauxtonAPI, ActiveTasks) {
+function (app, FauxtonAPI, ActiveTasks, Components, Actions) {
 
-  var Views = {},
-      Events = {},
-      pollingInfo = {
-        rate: '5',
-        intervalId: null
-      };
+  var Views = {};
 
-  Views.Events = _.extend(Events, Backbone.Events);
-
-  Views.View = FauxtonAPI.View.extend({
-    tagName: 'table',
-    className: 'table table-bordered table-striped active-tasks',
-    template: 'addons/activetasks/templates/table',
-
-    events: {
-      'click th': 'sortByType'
-    },
-
-    initialize: function () {
-      this.listenTo(this.searchModel, 'change', this.render);
-      this.listenTo(this.collection, 'reset', this.render);
-    },
-
-    beforeRender: function () {
-      this.filterAndInsertView();
-    },
-
-    filterAndInsertView: function () {
-      var database = this.searchModel.get('filterDatabase'),
-          filter = this.searchModel.get('filterType'),
-          databaseRegex = new RegExp(database, 'g');
-
-      this.removeView('.js-tasks-go-here');
-
-      this.collection.forEach(function (item) {
-
-        if (filter && filter !== 'all' && item.get('type') !== filter) {
-          return;
-        }
-
-        if (database &&
-            !databaseRegex.test(item.get('source')) &&
-            !databaseRegex.test(item.get('target')) &&
-            !databaseRegex.test(item.get('database'))) {
-          return;
-        }
-
-        var view = new Views.TableDetail({
-          model: item
-        });
-        this.insertView('.js-tasks-go-here', view);
-      }, this);
-    },
-
-    afterRender: function () {
-      Events.bind('update:poll', this.setPolling, this);
-      this.setPolling();
+  Views.ActiveTasksWrapper = FauxtonAPI.View.extend({
+    className: 'active-tasks-wrapper',
+    initialize: function (options) {
+      this.collection = options.collection;
     },
 
     establish: function () {
-      return [this.collection.fetch()];
-    },
-
-    serialize: function () {
-      return {
-        currentView: this.currentView,
-        collection: this.collection
-      };
-    },
-
-    sortByType: function (e) {
-      var currentTarget = e.currentTarget,
-          datatype = this.$(currentTarget).attr('data-type');
-
-      this.collection.sortByColumn(datatype);
-      this.render();
-    },
-
-    setPolling: function () {
-      var collection = this.collection;
-
-      clearInterval(pollingInfo.intervalId);
-      pollingInfo.intervalId = setInterval(function () {
-        collection.fetch({reset: true});
-      }, pollingInfo.rate * 1000);
-    },
-
-    cleanup: function () {
-      clearInterval(pollingInfo.intervalId);
-    }
-  });
-
-  Views.TabMenu = FauxtonAPI.View.extend({
-    tagName: 'nav',
-    className: 'sidenav',
-    template: 'addons/activetasks/templates/tabs',
-
-    events: {
-      'click .task-tabs li': 'requestByType',
-      'input #pollingRange': 'changePollInterval',
-      'change #pollingRange': 'changePollInterval'
-    },
-
-    serialize: function () {
-      return {
-        filters: {
-          'all': 'All tasks',
-          'replication': 'Replication',
-          'database_compaction': 'Database Compaction',
-          'indexer': 'Indexer',
-          'view_compaction': 'View Compaction'
-        }
-      };
+     return [this.collection.fetch()];
     },
 
     afterRender: function () {
-      this.$('.task-tabs').find('li').eq(0).addClass('active');
-    },
-
-    changePollInterval: function(e){
-      var range = this.$(e.currentTarget).val();
-      this.$('label[for="pollingRange"] span').text(range);
-      pollingInfo.rate = range;
-      clearInterval(pollingInfo.intervalId);
-      Events.trigger('update:poll');
+      Actions.setCollection(this.collection);
+      Components.renderActiveTasks(this.el);
     },
 
     cleanup: function () {
-      clearInterval(pollingInfo.intervalId);
-    },
-
-    requestByType: function(e){
-      var currentTarget = e.currentTarget,
-          filter = this.$(currentTarget).attr('data-type');
-
-      this.$('.task-tabs').find('li').removeClass('active');
-      this.$(currentTarget).addClass('active');
-
-      FauxtonAPI.triggerRouteEvent('changeFilter', filter);
+      Components.removeActiveTasks(this.el);
     }
   });
 
-  Views.TableDetail = FauxtonAPI.View.extend({
-    tagName: 'tr',
-    template: 'addons/activetasks/templates/tabledetail',
-
-    initialize: function () {
-      this.type = this.model.get('type');
+  Views.ActiveTasksSidebar = FauxtonAPI.View.extend({
+    tagName: 'nav',
+    className: 'sidenav active-tasks-sidebar',
+    initialize: function (options) {
+      Actions.switchTab('All Tasks');
+      Actions.changePollingInterval(5);
     },
 
-    getObject: function () {
-      var objectField = this.model.get('database');
-      if (this.type === 'replication') {
-        objectField = this.model.get('source') + ' to ' + this.model.get('target');
-      } else if (this.type === 'indexer') {
-        objectField = this.model.get('database') + ' (View: ' + this.model.get('design_document') + ')';
-      }
-      return objectField;
+    afterRender: function () {
+      Components.renderActiveTasksSidebar(this.el);
     },
 
-    getProgress: function () {
-      var progress = '';
-      if (this.type === 'indexer') {
-        progress = 'Processed ' + this.model.get('changes_done') + ' of ' + this.model.get('total_changes') + ' changes. ';
-      } else if (this.type === 'replication') {
-        progress = this.model.get('docs_written')+ ' docs written. ';
-        if (!_.isUndefined(this.model.get('changes_pending'))) {
-          progress += this.model.get('changes_pending') + ' pending changes. ';
-        }
-      }
-      if (!_.isUndefined(this.model.get('source_seq'))) {
-        progress += 'Current source sequence: ' + this.model.get('source_seq') + '. ';
-      }
-      if (!_.isUndefined(this.model.get('changes_done'))) {
-        progress += this.model.get('changes_done') + ' Changes done. ';
-      }
-      if (!_.isUndefined(this.model.get('progress'))) {
-        progress += 'Progress: ' + this.model.get('progress') + '% ';
-      }
-
-      return progress;
-    },
-
-    serialize: function () {
-      return {
-        model: this.model,
-        objectField: this.getObject(),
-        progress: this.getProgress()
-      };
-    }
-  });
-
-  Views.TabHeader = FauxtonAPI.View.extend({
-    template: 'addons/activetasks/templates/tab_header',
-
-    events: {
-      'keyup input': 'searchDb',
-      'click .js-toggle-filter': 'toggleQuery'
-    },
-
-    toggleQuery: function () {
-      $('#dashboard-content').scrollTop(0);
-      this.$('#query').toggle('slow');
-    },
-
-    searchDb: function (event) {
-      event.preventDefault();
-
-      var $search = this.$('input[name="search"]'),
-          database = $search.val();
-
-      this.searchModel.set('filterDatabase', database);
+    cleanup: function () {
+      Components.removeActiveTasksSidebar(this.el);
     }
   });
 

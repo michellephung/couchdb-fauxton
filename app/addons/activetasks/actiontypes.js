@@ -9,24 +9,14 @@
 // WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 // License for the specific language governing permissions and limitations under
 // the License.
-
-define([
-  'app',
-  'api'
-],
-
-function (app, FauxtonAPI) {
-  var Active = {};
-
-  Active.AllTasks = Backbone.Collection.extend({
-    url: function () {
-      return app.host + '/_active_tasks';
-    },
-    pollingFetch: function () {
-      this.fetch({reset: true});
-      return this;
-    }
-  });
-
-  return Active;
+define([], function () {
+  return {
+    ACTIVE_TASKS_CHANGE_POLLING_INTERVAL: 'ACTIVE_TASKS_CHANGE_POLLING_INTERVAL',
+    ACTIVE_TASKS_SWITCH_TAB: 'ACTIVE_TASKS_SWITCH_TAB',
+    ACTIVE_TASKS_SET_COLLECTION: 'ACTIVE_TASKS_SET_COLLECTION',
+    ACTIVE_TASKS_SET_SEARCH_TERM: 'ACTIVE_TASKS_SET_SEARCH_TERM',
+    ACTIVE_TASKS_SORT_BY_COLUMN_HEADER: 'ACTIVE_TASKS_SORT_BY_COLUMN_HEADER',
+    ACTIVE_TASKS_START_TIME_SINCE: 'ACTIVE_TASKS_START_TIME_SINCE',
+    ACTIVE_TASKS_TOGGLE_FILTER_TAB: 'ACTIVE_TASKS_TOGGLE_FILTER_TAB'
+  };
 });
