@@ -79,43 +79,54 @@ p.multiline-active-tasks-message {
   padding-right: 20px;
 }
 
-.dashboard-lower-menu {                   /*always onscreen*/
-    padding-top: 70px;
-    overflow: hidden;
+.active-tasks.dashboard-upper-menu {
+  left: 220px;
+
+  .closeMenu & {
+    left: 64px;
+  }
+}
+
+.dashboard-lower-menu {
+  padding-top: 70px;
+  padding-left: 20x;
 }
 
 input[type="text"].searchbox {
+  width: 200px;
+  height: 40px;
+  float: right;
   margin-top: 20px;
-  width: 400px;
 }
 
-input[type="text"].searchbox.updown-enter {               /* starting css*/
-  width: 200px;
-  height: 40px;
-  margin-left: 50px;
+.filter-tray.toggleFilterTray-enter {     /* starting css*/
+  overflow: hidden;
+  max-height: 0px;
+  background-color: green;
+}
+                                          /* animate opening */
+.filter-tray.toggleFilterTray-enter.toggleFilterTray-enter-active {     
+  max-height: 200px;
+  height: auto;
+  background-color: orange;
+  transition: max-height .3s, background-color .3s ;
 }
 
-input[type="text"].searchbox.updown-enter.updown-enter-active {     /* animate opening */
-  width: 200px;
-  height: 40px;
-  margin-left: -moz-calc(100% ~"-" 200px);
-  margin-left: -webkit-calc(100% ~"-" 200px);
-  margin-left: calc(100% ~"-" 200px);
-  transition: margin 0.5s;
+.filter-tray {                             /* final css */
+  background-color: blue;
+  height: auto;
+  max-height: 200px;                      
+  margin: 0px 0px 0px 20px;
+  overflow: hidden;
+}
+                                          /* animate closing */
+.filter-tray.toggleFilterTray-leave.toggleFilterTray-leave-active{     
+  max-height: 0;
+  background-color: red;
+  transition: max-height .3s, background-color .3s;
 }
 
-input[type="text"].searchbox {                             /* final css */
-  width: 200px;
-  height: 40px;
-
-  margin-left: -moz-calc(100% ~"-" 200px);
-  margin-left: -webkit-calc(100% ~"-" 200px);
-  margin-left: calc(100% ~"-" 200px);
-}
-
-input[type="text"].searchbox.updown-leave.updown-leave-active {     /* animate closing */
-  margin-left: 100px;
-  transition: margin 0.3s ease-in 0.5s, padding 0.5s;
-  -webkit-transition-delay: 0.1s; /* Safari */
-  transition-delay: 0.1s;
+.filter-checkboxes {
+  border: 1px solid blue;
+  float: left;
 }

@@ -33,6 +33,8 @@ function (app, FauxtonAPI, ActiveTasks, Components, Actions) {
     },
 
     afterRender: function () {
+      Actions.switchTab('All Tasks');
+      Actions.changePollingInterval(5);
       Actions.setCollection(this.collection);
       Components.renderActiveTasks(this.el);
     },
@@ -42,22 +44,21 @@ function (app, FauxtonAPI, ActiveTasks, Components, Actions) {
     }
   });
 
-  Views.ActiveTasksSidebar = FauxtonAPI.View.extend({
-    tagName: 'nav',
-    className: 'sidenav active-tasks-sidebar',
-    initialize: function (options) {
-      Actions.switchTab('All Tasks');
-      Actions.changePollingInterval(5);
-    },
+  // Views.ActiveTasksSidebar = FauxtonAPI.View.extend({
+  //   tagName: 'nav',
+  //   className: 'sidenav active-tasks-sidebar',
+  //   initialize: function (options) {
+      
+  //   },
 
-    afterRender: function () {
-      Components.renderActiveTasksSidebar(this.el);
-    },
+  //   afterRender: function () {
+  //     Components.renderActiveTasksSidebar(this.el);
+  //   },
 
-    cleanup: function () {
-      Components.removeActiveTasksSidebar(this.el);
-    }
-  });
+  //   cleanup: function () {
+  //     Components.removeActiveTasksSidebar(this.el);
+  //   }
+  // });
 
   return Views;
 });

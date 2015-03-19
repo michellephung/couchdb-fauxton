@@ -76,16 +76,16 @@ define([
       return this._searchTerm;
     },
 
-    isTabVisible: function () {
+    isFilterTrayVisible: function () {
       
-      if (_.isUndefined(this._tabIsVisible)) {
-        this._tabIsVisible = false;
+      if (_.isUndefined(this._isFilterTrayVisible)) {
+        this._isFilterTrayVisible = false;
       }
-      return this._tabIsVisible;
+      return this._isFilterTrayVisible;
     },
 
-    toggleTabVisibility: function () {
-      this._tabIsVisible = !this._tabIsVisible;
+    toggleFilterTray: function () {
+      this._isFilterTrayVisible = !this._isFilterTrayVisible;
     },
 
     sortCollectionByColumnHeader: function (colName) {
@@ -141,7 +141,7 @@ define([
         break;
 
         case ActionTypes.ACTIVE_TASKS_TOGGLE_FILTER_TAB:
-          this.toggleTabVisibility();
+          this.toggleFilterTray();
           this.triggerChange();
         break;
 

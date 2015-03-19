@@ -11,14 +11,14 @@
 // the License.
 
 define([
-  "app/helpers",
-  "api",
-  "react",
-  "addons/activetasks/stores",
-  "addons/activetasks/resources",
-  "addons/activetasks/actions"
-
+  'app/helpers',
+  'api',
+  'react',
+  'addons/activetasks/stores',
+  'addons/activetasks/resources',
+  'addons/activetasks/actions'
 ], function (Helpers, FauxtonAPI, React, Stores, Resources, Actions) {
+  
   var activeTasksStore = Stores.activeTasksStore;
   var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
@@ -28,9 +28,10 @@ define([
       return {  
         selectedTab: activeTasksStore.getSelectedTab(),
         collection: activeTasksStore.getCollection(),
-        searchTerm: activeTasksStore.getSearchTerm(),
         setPolling: activeTasksStore.setPolling,
-        clearPolling: activeTasksStore.clearPolling
+        clearPolling: activeTasksStore.clearPolling,
+        searchTerm: activeTasksStore.getSearchTerm(),
+        isFilterTrayVisible : activeTasksStore.isFilterTrayVisible() 
       };
     },
 
@@ -54,6 +55,7 @@ define([
       var collection = this.state.collection; 
       var searchTerm = this.state.searchTerm;
       var selectedTab = this.state.selectedTab;
+      var isFilterTrayVisible = this.state.isFilterTrayVisible;
 
       if (collection.length === 0 ) {
         return ( <div className="active-tasks"><tr><td><p>  No tasks. </p></td></tr></div> );
@@ -61,7 +63,7 @@ define([
         return (
           <div className="scrollable">
             <div className="inner">
-             <ActiveTasksFilterHeader/>
+              <ActiveTasksFilter searchTerm={searchTerm} isFilterTrayVisible={isFilterTrayVisible}/>
               <ActiveTaskTable collection={collection} searchTerm={searchTerm} selectedTab={selectedTab}/>
             </div>
           </div>
@@ -70,72 +72,114 @@ define([
     }
   });
 
-  var ActiveTasksFilterHeader = React.createClass({   //This is for the little '+ Filter' Tab 
-    
-    getStoreState: function () {
-      return { 
-        searchTerm: activeTasksStore.getSearchTerm,
-        showTabContent: activeTasksStore.isTabVisible 
-      };
-    },
-
-    getInitialState: function () {
-      return this.getStoreState();
-    },
-
-    toggleFilter: function () {
-      Actions.toggleTabVisibility();
-    },
-
+  var ActiveTasksFilter = React.createClass({
     render: function () {
-      var searchbox = '';
+      var filterTray = '';
 
-      if (this.state.showTabContent()) {
-        searchbox = <SearchBox key="searchbox" />;
+      if (this.props.isFilterTrayVisible) {
+        filterTray = <ActiveTasksFilterTray key="filter-tray" />;
       }
 
       return (
         <div id="dashboard-upper-content">
-          <div className="dashboard-upper-menu">
-            <ul className="nav nav-tabs" id="db-views-tabs-nav">
-              <li>
-                <a className="js-toggle-filter"
-                   data-bypass="true" 
-                   data-toggle="tab"
-                   href="#filter" onClick={this.toggleFilter}>
-                  <i className="fonticon fonticon-plus"></i>
-                  Filter
-                </a>
-              </li>
-            </ul>
+          <div className="dashboard-upper-menu active-tasks">
+            <ActiveTasksFilterTab/>
           </div>
-          
-          <ReactCSSTransitionGroup transitionName="updown" component="div" className="dashboard-lower-menu">
-            {searchbox} 
+          <ReactCSSTransitionGroup className="dashboard-lower-menu" transitionName="toggleFilterTray" component="div" >
+            {filterTray}
           </ReactCSSTransitionGroup>
-          
         </div>
       );
     }
   });
 
-  var SearchBox = React.createClass({
+  var ActiveTasksFilterTab = React.createClass({
+    toggleFilter: function () {
+      Actions.toggleTabVisibility();
+    },
+    render: function () {
+      return (
+        <ul className="nav nav-tabs" id="db-views-tabs-nav">
+          <li>
+            <a className="js-toggle-filter"
+               data-bypass="true" 
+               data-toggle="tab"
+               href="#filter" onClick={this.toggleFilter}>
+              <i className="fonticon fonticon-plus"></i>
+              Filter
+            </a>
+          </li>
+        </ul>);
+    }
+  });
+
+  var ActiveTasksFilterTray = React.createClass({
     setNewSearchTerm: function (e) {
-      Actions.setSearchTerm(e.target.value);
+      Actions.setSearchTerm(e.target.value);  //change this to a stores
     },
     
     render: function () {
       var searchTerm = activeTasksStore.getSearchTerm();
 
-      return (
+      return ( 
+        <div className="filter-tray">
+          <ActiveTasksFilterTrayCheckBoxes />
           <input  
-            key='same'
             className="searchbox" 
             type="text" 
             name="search" 
             placeholder="Search for databases..." 
             value={searchTerm}
-            onChange={this.setNewSearchTerm} />
+            onChange={this.setNewSearchTerm} />  
+        </div>
+      );
+    }
+  });
+
+  var ActiveTasksFilterTrayCheckBoxes = React.createClass({
+    switchTab: function (goToTab) {
+      Actions.switchTab(goToTab);
+    },
+
+    selectedTabClass: function (tabName) {
+      if (tabName === activeTasksStore.getSelectedTab()) { return 'active'; }
+      return '';
+    },
+
+    checkBoxNames : [
+        'All Tasks', 
+        'Replication',
+        'Database Compaction', 
+        'Indexer', 
+        'View Compaction'
+    ],
+
+    createCheckboxes: function () {
+      return (
+        this.checkBoxNames.map(function (boxName) {
+          var switchTabHandle = this.switchTab.bind(this, boxName);
+          var selectedTabClass = this.selectedTabClass(boxName);
+
+          return (
+            <li 
+              key = {boxName} 
+              onClick = {switchTabHandle} 
+              className = "{selectedTabClass} "//ACTIVE NOT ACTIVE
+            >
+              <a>{boxName}</a>
+            </li>
+          );
+        }.bind(this) )
+      );
+    },
+
+    render: function () {
+      var filterCheckboxes = this.createCheckboxes();
+      
+      return (
+        <div className="filter-checkboxes">
+          {filterCheckboxes}
+        </div>
       );
     }
   });
@@ -362,9 +406,6 @@ define([
   });
 
   var ActiveTasksSidebar = React.createClass({
-
-    //This is not a component inside the Controller Component, it is separate, 
-    //but it reads/writes to the Active Tasks store
     
     getStoreState: function () {
       return {  
@@ -377,21 +418,8 @@ define([
       return this.getStoreState();
     },
 
-    tabs : function () {
-      return ['All Tasks', 
-              'Replication',
-              'Database Compaction', 
-              'Indexer', 
-              'View Compaction'
-             ];
-    },
-
     componentDidMount: function () {
        activeTasksStore.on('change', this.onChange, this);      
-    },
-
-    switchTab: function (goToTab) {
-      Actions.switchTab(goToTab);
     },
 
     onChange: function () {  
@@ -400,46 +428,12 @@ define([
       }
     },
 
-    selectedTabClass: function (tabName) {
-      if (tabName === activeTasksStore.getSelectedTab()) { return 'active'; }
-      return '';
-    },
-
     pollingIntervalChange: function (event) {
       Actions.changePollingInterval(event.target.value);
     },
 
     getPluralForLabel: function () {
       return this.state.pollingInterval === "1" ? '' : 's';
-    },
-
-    createTabs: function () {
-      var tabs = this.eachTab();
-      
-      return (
-        <ul className="task-tabs nav nav-list">
-          {tabs}
-        </ul>
-      );
-    },
-
-    eachTab: function () {
-      return (
-        this.tabs().map(function (tabName) {
-          var switchTabHandle = this.switchTab.bind(this, tabName);
-          var selectedTabClass = this.selectedTabClass(tabName);
-
-          return (
-            <li 
-              key = {tabName} 
-              onClick = {switchTabHandle} 
-              className = {selectedTabClass}
-            >
-              <a>{tabName}</a>
-            </li>
-          );
-        }.bind(this))
-      );
     },
 
     createPollingWidget: function () {
@@ -467,12 +461,10 @@ define([
     },
 
     render: function () {
-      var sidebarTabs = this.createTabs();
       var pollingWidget = this.createPollingWidget();
 
       return (
         <div>
-          {sidebarTabs}
           {pollingWidget}
         </div>
       );
@@ -487,23 +479,15 @@ define([
     removeActiveTasks: function (el) {
       React.unmountComponentAtNode(el);
     },
-
-    renderActiveTasksSidebar: function (el) {
-      React.render(<ActiveTasksSidebar />, el);
-    },
-    removeActiveTasksSidebar: function (el) {
-      React.unmountComponentAtNode(el);
-    },
-
     ActiveTasksController: ActiveTasksController,
-    ActiveTasksSidebar: ActiveTasksSidebar,
-    ActiveTasksFilterHeader: ActiveTasksFilterHeader,
-    ActiveTaskTable: ActiveTaskTable,
-    ActiveTasksTableHeader: ActiveTasksTableHeader,
-    ActiveTasksTableBody: ActiveTasksTableBody,
-    ActiveTaskTableBodyContents: ActiveTaskTableBodyContents,
-    SearchBox: SearchBox
+      ActiveTasksFilter: ActiveTasksFilter,
+        ActiveTasksFilterTab: ActiveTasksFilterTab,
+        ActiveTasksFilterTray: ActiveTasksFilterTray,
 
+      ActiveTaskTable: ActiveTaskTable,
+        ActiveTasksTableHeader: ActiveTasksTableHeader,
+        ActiveTasksTableBody: ActiveTasksTableBody,
+        ActiveTaskTableBodyContents: ActiveTaskTableBodyContents,
   };
 
 });

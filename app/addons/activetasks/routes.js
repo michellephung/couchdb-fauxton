@@ -21,7 +21,7 @@ function (app, FauxtonAPI, Activetasks, Views) {
 
   var ActiveTasksRouteObject = FauxtonAPI.RouteObject.extend({
     selectedHeader: 'Active Tasks',
-    layout: 'with_tabs_sidebar',
+    layout: 'one_pane',
     routes: {
       'activetasks/:id': 'showActiveTasks',
       'activetasks': 'showActiveTasks'
@@ -39,7 +39,7 @@ function (app, FauxtonAPI, Activetasks, Views) {
     },
     showActiveTasks: function () {
       this.activeTasksSection = this.setView('#dashboard-content', new Views.ActiveTasksWrapper({collection: this.allTasks}));
-      this.sidebar = this.setView('#sidebar-content', new Views.ActiveTasksSidebar({}));
+    //  this.sidebar = this.setView('#sidebar-content', new Views.ActiveTasksSidebar({}));
     }
   });
 
