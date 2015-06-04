@@ -50,8 +50,7 @@ function (app, FauxtonAPI, React, Stores, Actions, Components, DocumentViews) {
     },
 
     render: function () {
-      return null;
-      /*var text = this.state.hidden ? 'show sidebar' : 'hide';
+      var text = this.state.hidden ? 'show sidebar' : 'hide';
       var classNames = 'sidebar-toggler';
       var icon = 'icon icon-chevron-left';
 
@@ -66,7 +65,7 @@ function (app, FauxtonAPI, React, Stores, Actions, Components, DocumentViews) {
             {text}
           </a>
         </div>
-      );*/
+      );
     }
 
   });

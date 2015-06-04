@@ -11,7 +11,7 @@
 // the License.
 define([
   'api',
-  'addons/documents/sidebar/sidebar.components.react',
+  'addons/documents/sidebar/sidebar.react',
   'addons/documents/sidebar/actions',
   'testUtils',
   "react"
