@@ -17,11 +17,13 @@ define([
   'addons/documents/sidebar/stores',
   'addons/documents/sidebar/actions',
   'addons/components/react-components.react',
+  'addons/documents/views',
 
   'plugins/prettify'
 ],
 
-function (app, FauxtonAPI, React, Stores, Actions, Components) {
+function (app, FauxtonAPI, React, Stores, Actions, Components, DocumentViews) {
+  var DeleteDBModal = DocumentViews.Views.DeleteDBModal;
   var store = Stores.sidebarStore;
   var LoadLines = Components.LoadLines;
 
@@ -365,6 +367,32 @@ function (app, FauxtonAPI, React, Stores, Actions, Components) {
 
   });
 
+  var DeleteDBModalWrapper = React.createClass({
+
+    componentDidMount: function () {
+      this.dbModal = new DeleteDBModal({
+        database: this.props.database,
+        isSystemDatabase: true,
+        el: this.getDOMNode()
+      });
+
+      this.dbModal.render();
+    },
+
+    componentWillUnmount: function () {
+      this.dbModal.remove();
+    },
+
+    componentWillReceiveProps: function (newProps) {
+      this.dbModal.database = newProps.database;
+      this.dbModal.isSystemDatabase = newProps.database.isSystemDatabase();
+    },
+
+    render: function () {
+      return <div id="delete-db-modal"> </div>;
+    }
+
+  });
 
   var SidebarController = React.createClass({
     getStoreState: function () {
@@ -373,7 +401,8 @@ function (app, FauxtonAPI, React, Stores, Actions, Components) {
         selectedTab: store.getSelectedTab(),
         designDocs: store.getDesignDocs(),
         isVisible: _.bind(store.isVisible, store),
-        isLoading: store.isLoading()
+        isLoading: store.isLoading(),
+        database: store.getDatabase()
       };
     },
 
@@ -416,6 +445,7 @@ function (app, FauxtonAPI, React, Stores, Actions, Components) {
             isVisible={this.state.isVisible}
             designDocs={this.state.designDocs}
             databaseName={this.state.databaseName} />
+          <DeleteDBModalWrapper database={this.state.database}/>
         </nav>
       );
     }

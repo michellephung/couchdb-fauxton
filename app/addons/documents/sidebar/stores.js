@@ -41,6 +41,12 @@ function (app, FauxtonAPI, ActionTypes) {
       return this._loading;
     },
 
+    getDatabase: function () {
+      if (this.isLoading()) {return {};}
+
+      return this._database;
+    },
+
     toggleContent: function (designDoc, index) {
       if (!this._toggledSections[designDoc]) {
         this._toggledSections[designDoc] = {
