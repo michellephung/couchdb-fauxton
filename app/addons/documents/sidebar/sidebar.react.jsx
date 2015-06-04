@@ -50,7 +50,8 @@ function (app, FauxtonAPI, React, Stores, Actions, Components, DocumentViews) {
     },
 
     render: function () {
-      var text = this.state.hidden ? 'show sidebar' : 'hide';
+      return null;
+      /*var text = this.state.hidden ? 'show sidebar' : 'hide';
       var classNames = 'sidebar-toggler';
       var icon = 'icon icon-chevron-left';
 
@@ -65,7 +66,7 @@ function (app, FauxtonAPI, React, Stores, Actions, Components, DocumentViews) {
             {text}
           </a>
         </div>
-      );
+      );*/
     }
 
   });
@@ -200,6 +201,7 @@ function (app, FauxtonAPI, React, Stores, Actions, Components, DocumentViews) {
         return (
           <li key={key}>
           <a
+            id={this.props.designDocName + '_' + index}
             href={"#/" + href + index}
             className="toggle-view">
             {index}
@@ -211,7 +213,6 @@ function (app, FauxtonAPI, React, Stores, Actions, Components, DocumentViews) {
 
     toggle: function (e) {
       e.preventDefault();
-      e.stopPropagation();
       var newToggleState = !this.props.contentVisible;
       var state = newToggleState ? 'show' : 'hide';
       $(this.getDOMNode()).find('.accordion-body').collapse(state);
@@ -228,8 +229,10 @@ function (app, FauxtonAPI, React, Stores, Actions, Components, DocumentViews) {
 
       var title = this.props.title;
       var icon = this.props.indexTypeMap[this.props.selector].icon;
+      var designDocName = this.props.designDocName;
+      var linkId = "nav-design-function-" + designDocName + this.props.selector;
       return (
-        <li onClick={this.toggle}>
+        <li id={linkId} onClick={this.toggle}>
           <a className={toggleClassNames} data-toggle="collapse">
             <div className="fonticon-play"></div>
             <span className={icon + " fonticon"}></span>
@@ -314,7 +317,7 @@ function (app, FauxtonAPI, React, Stores, Actions, Components, DocumentViews) {
         <li  className="nav-header">
 
         <div className={toggleClassNames}>
-          <div onClick={this.toggle} className='accordion-list-item'>
+          <div id={"nav-header-" + designDocName} onClick={this.toggle} className='accordion-list-item'>
             <div className='fonticon-play'></div>
             <p className='design-doc-name'>
               <span title={'_design/' + designDocName}>{'_design/' + designDocName}</span>
