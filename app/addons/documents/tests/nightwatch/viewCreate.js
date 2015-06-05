@@ -12,80 +12,80 @@
 
 module.exports = {
 
-  'Creates a Design Doc using the dropdown at "all documents"': function (client) {
-    var waitTime = client.globals.maxWaitTime;
-    var baseUrl = client.globals.test_settings.launch_url;
+  // 'Creates a Design Doc using the dropdown at "all documents"': function (client) {
+  //   var waitTime = client.globals.maxWaitTime;
+  //   var baseUrl = client.globals.test_settings.launch_url;
 
-    /*jshint multistr: true */
-    openDifferentDropdownsAndClick(client, '#header-dropdown-menu')
-      .waitForElementPresent('#new-ddoc', waitTime, false)
-      .setValue('#new-ddoc', 'test_design_doc-selenium-1')
-      .clearValue('#index-name')
-      .setValue('#index-name', 'hasenindex')
-      .execute('\
-        var editor = ace.edit("map-function");\
-        editor.getSession().setValue("function (doc) { emit(\'hasehase\'); }");\
-      ')
-      .execute('$(".save")[0].scrollIntoView();')
-      .waitForElementPresent('button.btn.btn-success.save', waitTime, false)
-      .clickWhenVisible('button.btn.btn-success.save', waitTime, false)
-      .checkForDocumentCreated('_design/test_design_doc-selenium-1')
-      .waitForElementPresent('.prettyprint', waitTime, false)
-      .waitForElementNotPresent('.loading-lines', waitTime, false)
-      .assert.containsText('.prettyprint', 'hasehase')
-    .end();
-  },
+  //   /*jshint multistr: true */
+  //   openDifferentDropdownsAndClick(client, '#header-dropdown-menu')
+  //     .waitForElementPresent('#new-ddoc', waitTime, false)
+  //     .setValue('#new-ddoc', 'test_design_doc-selenium-1')
+  //     .clearValue('#index-name')
+  //     .setValue('#index-name', 'hasenindex')
+  //     .execute('\
+  //       var editor = ace.edit("map-function");\
+  //       editor.getSession().setValue("function (doc) { emit(\'hasehase\'); }");\
+  //     ')
+  //     .execute('$(".save")[0].scrollIntoView();')
+  //     .waitForElementPresent('button.btn.btn-success.save', waitTime, false)
+  //     .clickWhenVisible('button.btn.btn-success.save', waitTime, false)
+  //     .checkForDocumentCreated('_design/test_design_doc-selenium-1')
+  //     .waitForElementPresent('.prettyprint', waitTime, false)
+  //     .waitForElementNotPresent('.loading-lines', waitTime, false)
+  //     .assert.containsText('.prettyprint', 'hasehase')
+  //   .end();
+  // },
 
-  'Creates a Design Doc and does not crash after navigating': function (client) {
-    var waitTime = client.globals.maxWaitTime;
-    var baseUrl = client.globals.test_settings.launch_url;
+  // 'Creates a Design Doc and does not crash after navigating': function (client) {
+  //   var waitTime = client.globals.maxWaitTime;
+  //   var baseUrl = client.globals.test_settings.launch_url;
 
-    /*jshint multistr: true */
-    openDifferentDropdownsAndClick(client, '#header-dropdown-menu')
-      .waitForElementPresent('#new-ddoc', waitTime, false)
-      .setValue('#new-ddoc', 'test_design_doc-selenium-3')
-      .clearValue('#index-name')
-      .setValue('#index-name', 'hasenindex')
-      .execute('\
-        var editor = ace.edit("map-function");\
-        editor.getSession().setValue("function (doc) { emit(\'hasehase\'); }");\
-      ')
-      .execute('$(".save")[0].scrollIntoView();')
-      .waitForElementPresent('button.btn.btn-success.save', waitTime, false)
-      .clickWhenVisible('button.btn.btn-success.save', waitTime, false)
-      .checkForDocumentCreated('_design/test_design_doc-selenium-1')
-      .waitForElementPresent('.prettyprint', waitTime, false)
-      .waitForElementNotPresent('.loading-lines', waitTime, false)
-      .assert.containsText('.prettyprint', 'hasehase')
-      .back()
-      .waitForElementPresent('.watermark-logo', waitTime, false)
-    .end();
-  },
+  //   /*jshint multistr: true */
+  //   openDifferentDropdownsAndClick(client, '#header-dropdown-menu')
+  //     .waitForElementPresent('#new-ddoc', waitTime, false)
+  //     .setValue('#new-ddoc', 'test_design_doc-selenium-3')
+  //     .clearValue('#index-name')
+  //     .setValue('#index-name', 'hasenindex')
+  //     .execute('\
+  //       var editor = ace.edit("map-function");\
+  //       editor.getSession().setValue("function (doc) { emit(\'hasehase\'); }");\
+  //     ')
+  //     .execute('$(".save")[0].scrollIntoView();')
+  //     .waitForElementPresent('button.btn.btn-success.save', waitTime, false)
+  //     .clickWhenVisible('button.btn.btn-success.save', waitTime, false)
+  //     .checkForDocumentCreated('_design/test_design_doc-selenium-1')
+  //     .waitForElementPresent('.prettyprint', waitTime, false)
+  //     .waitForElementNotPresent('.loading-lines', waitTime, false)
+  //     .assert.containsText('.prettyprint', 'hasehase')
+  //     .back()
+  //     .waitForElementPresent('.watermark-logo', waitTime, false)
+  //   .end();
+  // },
 
-  'Creates a Design Doc using the dropdown at "the upper dropdown in the header"': function (client) {
-    var waitTime = client.globals.maxWaitTime;
-    var baseUrl = client.globals.test_settings.launch_url;
+  // 'Creates a Design Doc using the dropdown at "the upper dropdown in the header"': function (client) {
+  //   var waitTime = client.globals.maxWaitTime;
+  //   var baseUrl = client.globals.test_settings.launch_url;
 
-    /*jshint multistr: true */
-    openDifferentDropdownsAndClick(client, '#header-dropdown-menu')
-      .waitForElementPresent('#new-ddoc', waitTime, false)
-      .waitForElementVisible('#new-ddoc', waitTime, false)
-      .setValue('#new-ddoc', 'test_design_doc-selenium-2')
-      .clearValue('#index-name')
-      .setValue('#index-name', 'gaenseindex')
-      .sendKeys("textarea.ace_text-input", client.Keys.Enter)
-      .execute('\
-        var editor = ace.edit("map-function");\
-        editor.getSession().setValue("function (doc) { emit(\'gansgans\'); }");\
-      ')
-      .execute('$(".save")[0].scrollIntoView();')
-      .clickWhenVisible('button.btn-success.save')
-      .checkForDocumentCreated('_design/test_design_doc-selenium-2')
-      .waitForElementPresent('.prettyprint', waitTime, false)
-      .waitForElementNotPresent('.loading-lines', waitTime, false)
-      .assert.containsText('.prettyprint', 'gansgans')
-    .end();
-  },
+  //   /*jshint multistr: true */
+  //   openDifferentDropdownsAndClick(client, '#header-dropdown-menu')
+  //     .waitForElementPresent('#new-ddoc', waitTime, false)
+  //     .waitForElementVisible('#new-ddoc', waitTime, false)
+  //     .setValue('#new-ddoc', 'test_design_doc-selenium-2')
+  //     .clearValue('#index-name')
+  //     .setValue('#index-name', 'gaenseindex')
+  //     .sendKeys("textarea.ace_text-input", client.Keys.Enter)
+  //     .execute('\
+  //       var editor = ace.edit("map-function");\
+  //       editor.getSession().setValue("function (doc) { emit(\'gansgans\'); }");\
+  //     ')
+  //     .execute('$(".save")[0].scrollIntoView();')
+  //     .clickWhenVisible('button.btn-success.save')
+  //     .checkForDocumentCreated('_design/test_design_doc-selenium-2')
+  //     .waitForElementPresent('.prettyprint', waitTime, false)
+  //     .waitForElementNotPresent('.loading-lines', waitTime, false)
+  //     .assert.containsText('.prettyprint', 'gansgans')
+  //   .end();
+  // },
 
   'Adds a View to a DDoc using an existing DDoc': function (client) {
     var waitTime = client.globals.maxWaitTime;
@@ -93,7 +93,14 @@ module.exports = {
     var newDatabaseName = client.globals.testDatabaseName;
     /*jshint multistr: true */
 
-    openDifferentDropdownsAndClick(client, '#nav-header-testdesigndoc')
+ //'#nav-header-testdesigndoc')
+
+    client
+      .loginToGUI()
+      .populateDatabase(newDatabaseName)
+      .url(baseUrl + '/#/database/' + newDatabaseName + '/_all_docs')
+      .clickWhenVisible('#sidebar-tab-testdesigndoc a.dropdown-toggle.icon.fonticon-plus-circled', waitTime, false)
+      .clickWhenVisible('#sidebar-tab-testdesigndoc a[href*="new_view"]', waitTime, false)
       .waitForElementVisible('#index-name', waitTime, false)
       .clearValue('#index-name')
       .setValue('#index-name', 'test-new-view')
@@ -111,8 +118,8 @@ module.exports = {
       //go back to all docs
       .url(baseUrl + '/#/database/' + newDatabaseName + '/_all_docs')
       .clickWhenVisible('#nav-header-testdesigndoc', waitTime, false)
-      .clickWhenVisible('[data-target="#testdesigndocviews"]', waitTime, false)
-      .clickWhenVisible('#testdesigndoc_testnewview', waitTime, false)
+      .clickWhenVisible('#nav-design-function-testdesigndocviews', waitTime, false)
+      .clickWhenVisible('#testdesigndoc_test-new-view', waitTime, false)
       .waitForElementPresent('.prettyprint', waitTime, false)
       .waitForElementNotPresent('.loading-lines', waitTime, false)
       .assert.containsText('.prettyprint', 'enteente')

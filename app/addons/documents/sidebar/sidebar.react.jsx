@@ -35,7 +35,6 @@ function (app, FauxtonAPI, React, Stores, Actions, Components, DocumentViews) {
     },
 
     toggle: function (e) {
-      console.log('clik');
       e.preventDefault();
       var newHiddenState = !this.state.hidden;
       this.setState({hidden: newHiddenState});
@@ -51,22 +50,6 @@ function (app, FauxtonAPI, React, Stores, Actions, Components, DocumentViews) {
 
     render: function () {
       return null;
-      /*var text = this.state.hidden ? 'show sidebar' : 'hide';
-      var classNames = 'sidebar-toggler';
-      var icon = 'icon icon-chevron-left';
-
-      if (this.state.hidden) {
-        classNames += ' sidebar-hidden';
-        icon = 'icon icon-chevron-right';
-      }
-      return (
-        <div >
-          <a onClick={this.toggle} data-bypass="true" className={classNames} href="#">
-            <span className={icon}></span>
-            {text}
-          </a>
-        </div>
-      );*/
     }
 
   });
@@ -316,7 +299,7 @@ function (app, FauxtonAPI, React, Stores, Actions, Components, DocumentViews) {
       return (
         <li  className="nav-header">
 
-        <div className={toggleClassNames}>
+        <div id={"sidebar-tab-" + designDocName} className={toggleClassNames}>
           <div id={"nav-header-" + designDocName} onClick={this.toggle} className='accordion-list-item'>
             <div className='fonticon-play'></div>
             <p className='design-doc-name'>
@@ -374,7 +357,7 @@ function (app, FauxtonAPI, React, Stores, Actions, Components, DocumentViews) {
     componentDidMount: function () {
       this.dbModal = new DeleteDBModal({
         database: this.props.database,
-        isSystemDatabase: true,
+        isSystemDatabase: (/^_/).test(this.props.database.id),
         el: this.getDOMNode()
       });
 
