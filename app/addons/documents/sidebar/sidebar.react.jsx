@@ -233,10 +233,10 @@ function (app, FauxtonAPI, React, Stores, Actions, Components, DocumentViews) {
   var DesignDoc = React.createClass({
 
     createIndexList: function () {
-
       var sidebarListTypes = FauxtonAPI.getExtensions('sidebar:list');
 
-      if (sidebarListTypes[0].selector !== 'views') {
+      if (_.isEmpty(sidebarListTypes) ||
+        (_.has(sidebarListTypes[0], 'selector') && sidebarListTypes[0].selector !== 'views')) {
         sidebarListTypes.unshift({
           selector: 'views',
           name: 'Views'

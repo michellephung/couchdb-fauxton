@@ -80,9 +80,7 @@ function (app, FauxtonAPI, ActionTypes) {
       }
 
       if (index) {
-        var x = this._toggledSections[designDoc].indexes[index];
-        console.log('in', index, x, designDoc);
-        return x;
+        return this._toggledSections[designDoc].indexes[index];
       }
 
       return this._toggledSections[designDoc].visible;
@@ -100,10 +98,18 @@ function (app, FauxtonAPI, ActionTypes) {
 
     getDesignDocs: function () {
       if (this.isLoading()) { return {};}
-
       var docs = this._designDocs.toJSON();
+
+      docs = _.filter(docs, function (doc) {
+        if (_.has(doc.doc, 'language')) {
+          return doc.doc.language !== 'query';
+        }
+        return true;
+      });
+
       return docs.map(function (doc) {
         doc.safeId = app.utils.safeURLName(doc._id.replace(/^_design\//, ""));
+
         return _.extend(doc, doc.doc);
       });
     },
