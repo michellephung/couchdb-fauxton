@@ -168,6 +168,8 @@ function (app, FauxtonAPI, BaseRoute, Documents, Changes, ChangesActions, DocEdi
       },
 
       changes: function () {
+        ///!!!here
+        console.log(Changes);
         ChangesActions.initChanges({
           databaseName: this.database.id
         });
