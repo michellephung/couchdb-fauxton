@@ -186,6 +186,8 @@ function (app, FauxtonAPI, BaseRoute, Documents, Changes, ChangesActions, DocEdi
         this.rightHeader.hideQueryOptions();
 
         this.apiUrl = function () {
+
+          console.log(FauxtonAPI.urls('changes', 'apiurl', this.database.id, ''));
           return [FauxtonAPI.urls('changes', 'apiurl', this.database.id, ''), this.database.documentation()];
         };
       },
