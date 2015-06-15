@@ -654,6 +654,30 @@ function (app, FauxtonAPI, React, Components, ace, beautifyHelper) {
     }
   });
 
+  var SimpleDoc = React.createClass({
+    //must be enclosed in tag with id = "doc-list"
+    render: function () {
+      return (
+        <div className="doc-row">
+          <div className="doc-item">
+            <header>
+              <span className="header-keylabel">
+                _id
+              </span>
+              <span className="header-doc-id">
+                {this.props.id}
+              </span>
+            </header>
+              <div className="doc-data">
+                <pre className="prettyprint">{this.props.content}</pre>
+              </div>
+          </div>
+          <div className="clearfix"></div>
+        </div>
+      );
+    }
+  });
+
   var LoadLines = React.createClass({
     render: function () {
       return (
@@ -734,6 +758,113 @@ function (app, FauxtonAPI, React, Components, ace, beautifyHelper) {
 
   });
 
+  var ToggleState = React.createClass({
+    getDefaultProps: function () {
+      return {
+        defaultLeft: 'true'
+      };
+    },
+    render: function () {
+      var config = this.props.toggleConfig,
+          defaultLeft = false,
+          defaultRight = false;
+
+      var title = config.title,
+          leftLabel = config.leftLabel,
+          rightLabel = config.rightLabel,
+          leftClick = config.leftClick,
+          rightClick = config.rightClick,
+          enclosingID = config.enclosingID;
+
+      if (config.defaultLeft) {
+        defaultLeft = "checked";
+        defaultRight = false;
+      } else {
+        defaultRight = "checked";
+        defaultLeft = false;
+      }
+
+      return (
+        <div id={enclosingID} className="toggle-states">
+          <div className="toggle-title noselect">{title}</div>
+          <div className="toggles">
+            <input type="radio" 
+              id = {"toggle-state-left-id-" + enclosingID}
+              name={"toggle_" + enclosingID}
+              className="input-toggle-hidden"
+              defaultChecked = {defaultLeft}
+              onClick={leftClick} />
+              <label 
+                htmlFor={"toggle-state-left-id-" + enclosingID} 
+                className="checkbox-label toggle-state-button left noselect">
+                {leftLabel}
+              </label>
+            <input type="radio"
+              id = {"toggle-state-right-id-" + enclosingID} 
+              name={"toggle_" + enclosingID}
+              defaultChecked = {defaultRight}
+              className="input-toggle-hidden "
+              onClick={rightClick} />
+              <label 
+                htmlFor={"toggle-state-right-id-" + enclosingID}
+                className="checkbox-label toggle-state-button right noselect">
+                {rightLabel}
+              </label>
+            </div>
+        </div>
+      );
+    }
+  });
+
+  var SmallDropdown = React.createClass({
+    getInitialState: function () {
+      return {
+        show: false
+      };
+    },
+
+    toggleMenu: function () {
+      this.setState({ show: !this.state.show});
+    },
+
+    selectOptions: function () {
+      var selects = this.props.dropdownSetup.selectOptions;
+
+      return selects.map(function (opt, i) {
+        var name = opt.name,
+            fn = opt.onClick;
+
+        return (
+          <li key={i} 
+            onClick={fn}
+            className="dropdown-options">
+          {name}
+          </li>
+        );
+      }.bind(this));
+    },
+
+    render: function () {
+      var setup = this.props.dropdownSetup,
+          show = this.state.show ? 'show' : '';
+
+      return (
+        <div id={setup.id} className="small-dropdown">
+          <div className="title">{setup.title}</div>
+          <div className="selected" onClick={this.toggleMenu}>
+            {setup.selected}
+            <div id="dropdown-icon" className="icon icon-caret-down">
+            </div>
+          </div>
+          <ul 
+            onClick={this.toggleMenu} 
+            className={"dropdown-select " + show}>
+            {this.selectOptions()}
+          </ul>
+        </div>
+      );
+    }
+  });
 
   return {
     ConfirmButton: ConfirmButton,
@@ -746,7 +877,10 @@ function (app, FauxtonAPI, React, Components, ace, beautifyHelper) {
     PaddedBorderedBox: PaddedBorderedBox,
     Document: Document,
     LoadLines: LoadLines,
-    MenuDropDown: MenuDropDown
+    MenuDropDown: MenuDropDown,
+    ToggleState: ToggleState,
+    SimpleDoc: SimpleDoc,
+    SmallDropdown: SmallDropdown
   };
 
 });

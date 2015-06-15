@@ -268,7 +268,6 @@ function (app, FauxtonAPI, React, ZeroClipboard) {
     }
   });
 
-
   return {
     Clipboard: Clipboard,
     ClipboardWithTextField: ClipboardWithTextField,
