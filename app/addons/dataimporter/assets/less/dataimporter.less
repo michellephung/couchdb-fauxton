@@ -133,6 +133,7 @@
 
 @footerHeight : 100px;
 @fakeMargin: 15px solid #f1f1f1;
+@footerWidthSingtons : 190px;
 .chartSpacing() {
   max-width: 150px;
   white-space: nowrap;
@@ -246,7 +247,7 @@
     transform: translateY(-40%);
     vertical-align: middle;
     margin: 0px 15px 0px 15px;
-    overflow-x: scroll; 
+
     > div {
       display: inline-block;
       margin-right: 15px;
@@ -264,7 +265,7 @@
 
   #choose-database-to-load-data-into {
     width: 380px;
-    height: 22px;
+    height: 21px;
 
     .toggle-state-button {
       width: 50%;
@@ -272,6 +273,8 @@
   }
 
   #data-importer-choose-db {
+    width: @footerWidthSingtons;
+    
     ul.dropdown-select.show {
       position: absolute;
       top: -164px;
@@ -282,7 +285,7 @@
   }
 
   #data-import-name-new-target-database {
-    width: 182px;
+    width: @footerWidthSingtons;
     height: 40px;
     font-size: 11px;
     vertical-align: bottom;
@@ -297,7 +300,7 @@
       height: 22px;
       padding: 0px;
       margin-top: 3px;
-      width: 182px;
+      width: @footerWidthSingtons;
       font-size: 12px;
     }
   }
@@ -305,7 +308,7 @@
   #data-import-load-button {
     background-color: @darkRed;
     border: 1px solid @darkRed;
-    width: 181px;
+    width: @footerWidthSingtons;
     font-size: 13px;
     height: 21px;
     line-height: 22px;
