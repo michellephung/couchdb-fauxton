@@ -590,7 +590,7 @@ define([
     },
 
     importData : function () {
-      console.log("importData");
+      console.log( this.state.targetDB );
     },
 
     render: function () {
