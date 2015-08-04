@@ -549,7 +549,10 @@ define([
         rightLabel : 'Load in a new database',
         defaultLeft: true,
         leftClick: function () {
-          this.setState({ selectExistingDB: true });
+          this.setState({
+            selectExistingDB: true,
+            targetDB: this.props.getAllDBs[0]
+          });
         }.bind(this),
         rightClick: function () {
           this.setState({ selectExistingDB: false });
@@ -576,31 +579,54 @@ define([
       return (
         <div id="data-import-name-new-target-database">
           <div id="title">Name New Database</div>
-          <input type="text" id="type-new-db-name-here"/>
+          <input
+            id="type-new-db-name-here"
+            type="text"
+            readonly
+            value={this.state.newDatabaseName}
+            onKeyUp={this.newDatabaseNameChange}
+            onClick={this.setFocus}
+            onBlur={this.unsetFocus}
+            />
         </div>
       );
     },
 
+    setFocus: function () {
+
+    },
+
+    unsetFocus: function () {
+
+    },
+
+    newDatabaseNameChange: function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+      var newName = e.target.value;
+      this.setState({ targetDB : newName });
+    },
+
     importButton : function () {
       return (
-        <div id="data-import-load-button" onClick={ this.importData() }>
+        <div id="data-import-load-button" onClick={ this.importData }>
           Load
         </div>
       );
     },
 
     importData : function () {
-      console.log( this.state.targetDB );
+      console.log( "t:", this.state.targetDB );
     },
 
     render: function () {
-      var targetDatabase = this.state.selectExistingDB ?
+      var targetDatabaseInput = this.state.selectExistingDB ?
         this.chooseDatabaseFromDropdown() : this.createNewDB();
 
       return (
         <div id="preview-page-footer-container">
           <div id="data-import-controls">
-            {targetDatabase}
+            {targetDatabaseInput}
             {this.newOrExistingToggle()}
             {this.importButton()}
           </div>
