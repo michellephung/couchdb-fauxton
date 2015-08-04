@@ -582,27 +582,13 @@ define([
           <input
             id="type-new-db-name-here"
             type="text"
-            readonly
             value={this.state.newDatabaseName}
-            onKeyUp={this.newDatabaseNameChange}
-            onClick={this.setFocus}
-            onBlur={this.unsetFocus}
-            />
+            onChange={this.newDatabaseNameChange} />
         </div>
       );
     },
 
-    setFocus: function () {
-
-    },
-
-    unsetFocus: function () {
-
-    },
-
     newDatabaseNameChange: function (e) {
-      e.stopPropagation();
-      e.preventDefault();
       var newName = e.target.value;
       this.setState({ targetDB : newName });
     },

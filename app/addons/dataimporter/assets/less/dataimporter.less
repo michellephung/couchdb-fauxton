@@ -231,14 +231,17 @@
   }
 
   #preview-page-footer-container {
-    width: 100%;
     background-color: #f1f1f1;
     color: white;
-    position: absolute;
+    position: fixed;
     bottom: 0;
-    width: inherit;
+    width: calc(100% ~"-" @navWidth);
     margin-left: -15px;
     height: @footerHeight;
+
+    .closeMenu & {
+      width: calc(100% ~"-" @collapsedNavWidth);
+    }
   }
 
   #data-import-controls {
