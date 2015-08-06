@@ -222,29 +222,20 @@ define([
         left: 0
       };
     },
-    startOverButton: function () {
-      return (
-        <a className="start-import-over-link" 
-          onClick={this.startover}>
-          Start Over
-        </a>
-      );
-    },
-    startover: function () {
-      Actions.dataImporterInit(true);
-    },
     bigFilePreviewWarning: function () {
       var rowShown = this.props.rowShown,
           totalRows = this.props.rowsTotal;
 
       return (
-        <div className="big-file-info-message">
-          <p className="big-file-preview-limit-info-message">
-            Because of the size of this file, this preview only shows the 
-            first {rowShown} rows, out of {totalRows} rows total.
-            However, if you choose to load the data into a database, the 
-            entirety of the file (all {totalRows} rows) will be imported.
-          </p>
+        <div className="top-row">
+          <div className="big-file-info-message">
+            <p className="big-file-preview-limit-info-message">
+              Because of the size of this file, this preview only shows the 
+              first {rowShown} rows, out of {totalRows} rows total.
+              However, if you choose to load the data into a database, the 
+              entirety of the file (all {totalRows} rows) will be imported.
+            </p>
+          </div>
         </div>
       );
     },
@@ -261,19 +252,15 @@ define([
     },
     render: function () {
 
-      var startOverButton = this.startOverButton(),
-          bigFileInfoMessage =
+      var bigFileInfoMessage =
             this.props.isBigFile ? this.bigFilePreviewWarning() : "",
           style = {'left': this.state.left};
 
       return (
         <div id="preview-page" > 
           <div id="data-import-options" style={style}>
-            <div className="top-row">
-              {startOverButton}
-              {bigFileInfoMessage}
-            </div>
-            <OptionsRow getDelimiterChosen={this.props.getDelimiterChosen}/>
+            {bigFileInfoMessage}
+            <OptionsRow getDelimiterChosen={this.props.getDelimiterChosen} />
           </div>
           <div className="preview-data-space">
             <TableView 
@@ -494,7 +481,7 @@ define([
 
           return (
             <Components.SimpleDoc 
-              id={i} 
+              id={"<UUID>_" + i} 
               content={JSON.stringify(obj, null, ' ')}
               key={i} />
           );
@@ -521,6 +508,20 @@ define([
         targetDB: this.props.getAllDBs[0],
         selectExistingDB: true
       };
+    },
+
+    startOverButton: function () {
+      return (
+        <a className="start-import-over-link footer-button" 
+          onClick={this.startover}>
+          <span className="fonticon icon-repeat"></span>
+            Start Over
+        </a>
+      );
+    },
+
+    startover: function () {
+      Actions.dataImporterInit(true);
     },
 
     getExistingDBList: function () {
@@ -595,18 +596,22 @@ define([
 
     importButton : function () {
       return (
-        <div id="data-import-load-button" onClick={ this.importData }>
+        <div id="data-import-load-button"
+          className="footer-button"
+          onClick={ this.importData }>
+          <span className="icon-download-alt fonticon"></span>
           Load
         </div>
       );
     },
 
     importData : function () {
-      console.log( "t:", this.state.targetDB );
+      Actions.loadDataIntoDatabase(this.state.targetDB);
     },
 
     render: function () {
-      var targetDatabaseInput = this.state.selectExistingDB ?
+      var startOverButton = this.startOverButton(),
+          targetDatabaseInput = this.state.selectExistingDB ?
         this.chooseDatabaseFromDropdown() : this.createNewDB();
 
       return (
@@ -614,6 +619,7 @@ define([
           <div id="data-import-controls">
             {targetDatabaseInput}
             {this.newOrExistingToggle()}
+            {startOverButton}
             {this.importButton()}
           </div>
         </div>

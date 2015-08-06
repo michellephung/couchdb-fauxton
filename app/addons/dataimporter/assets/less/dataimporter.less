@@ -131,7 +131,7 @@
   }
 }
 
-@footerHeight : 100px;
+@footerHeight : 120px;
 @fakeMargin: 15px solid #f1f1f1;
 @footerWidthSingtons : 190px;
 .chartSpacing() {
@@ -164,21 +164,12 @@
     width: 100%;
     padding-top: 10px;
 
-    .start-import-over-link {
-      background-color: @darkRed;
-      color: #fff;
-      padding: 10px;
-      margin-bottom: 20px;
-      vertical-align: middle;
-      display: inline-block;
-    }
-
     .big-file-info-message {
       display: inline-block;
-      max-width: 400px;
+      max-width: 600px;
+      line-height: 1.25;
       margin: 0 auto;
       vertical-align: middle;
-      float: right;
 
       .big-file-preview-limit-info-message {
         display: inline-block;
@@ -269,6 +260,7 @@
   #choose-database-to-load-data-into {
     width: 380px;
     height: 21px;
+    padding: 2px;
 
     .toggle-state-button {
       width: 50%;
@@ -309,17 +301,41 @@
     }
   }
 
-  #data-import-load-button {
-    background-color: @darkRed;
-    border: 1px solid @darkRed;
+  .footer-button {
     width: @footerWidthSingtons;
-    font-size: 13px;
     height: 21px;
     line-height: 22px;
-    position: relative;
-    top: -1px;
+    font-size: 11px;
     margin-top: 5px;
     text-align: center;
     cursor: pointer;
+    display: inline-block;
+
+    &.start-import-over-link {
+      background-color: white;
+      border: 1px solid #ccc;
+      color: @darkRed;
+
+      padding-bottom: 20px;
+      font-weight: bold;
+
+      &:hover {
+        text-decoration: none;
+        color: white;
+        background-color: #4D4D4D;
+      }
+    }
+
+    &#data-import-load-button {
+      background-color: @darkRed;
+      border-bottom: 1px solid @darkRed;
+      position: relative;
+      top: -1px;
+    }
+
+    .fonticon{
+      padding-right: 10px;
+    }
   }
+
 }

@@ -49,6 +49,12 @@ function (FauxtonAPI, ActionTypes, Resources) {
         key: key,
         value: value
       });
+    },
+    loadDataIntoDatabase: function (targetDB) {
+      FauxtonAPI.dispatch({
+        type: ActionTypes.DATA_IMPORTER_LOAD_DATA_INTO_DB,
+        targetDB: targetDB
+      });
     }
   };
 });

@@ -83,9 +83,7 @@ define([
     },
 
     isThisABigFile: function () {
-      console.log("UNCOMMENT OUT HERE");
-      return this._theFile.size > 7 ? true : false;
-      //return this._theFile.size > 75000 ? true : false;
+      return this._theFile.size > 75000 ? true : false;
     },
 
     loadMeta: function (meta) {
@@ -111,14 +109,14 @@ define([
     calcSmallPreviewOfData: function () {
       var filesize = this._theFile.size,
           rows = this._theData.length,
-          sizeOfEachRow,    //this is approximate!
+          sizeOfEachRow = filesize / rows, //this is approximate
           sizeCap = 75000,  //in bytes
           numberOfRowsToShow;
 
-      sizeOfEachRow = filesize / rows;
       numberOfRowsToShow = Math.ceil(sizeCap / sizeOfEachRow);
 
       this._rowsShown = numberOfRowsToShow;
+      console.log(numberOfRowsToShow);
       this._totalRows = rows;
       this._smallData = this._theData.slice(0, this._rowsShown);
     },
@@ -195,6 +193,27 @@ define([
       };
     },
 
+    loadDataIntoDatabase: function (targetDB) {
+
+      _.forEach(this._theData, function (json, i) {
+        var loadURL = FauxtonAPI.urls('document', 'server', targetDB, '');
+        sendData(loadURL, json);
+      });
+
+      function sendData (loadURL, json) {
+        console.log(JSON.stringify(json));
+        $.ajax({
+          url: loadURL,
+          xhrFields: { withCredentials: true },
+          contentType: 'application/json; charset=UTF-8',
+          type: 'POST',
+          data: JSON.stringify(json),
+          success: function (resp) { console.log("yay"); },
+          error: function (resp) { console.log("errrrr"); return;}
+        });
+      }
+    },
+
     dispatch: function (action) {
       switch (action.type) {
         case ActionTypes.DATA_IMPORTER_INIT:
@@ -225,6 +244,10 @@ define([
 
         case ActionTypes.DATA_IMPORTER_GET_ALL_DBS:
           this.getAllDBs(action.databases);
+        break;
+
+        case ActionTypes.DATA_IMPORTER_LOAD_DATA_INTO_DB:
+          this.loadDataIntoDatabase(action.targetDB);
         break;
 
         default:
