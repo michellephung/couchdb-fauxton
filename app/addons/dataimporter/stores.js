@@ -195,23 +195,26 @@ define([
 
     loadDataIntoDatabase: function (targetDB) {
 
-      _.forEach(this._theData, function (json, i) {
-        var loadURL = FauxtonAPI.urls('document', 'server', targetDB, '');
-        sendData(loadURL, json);
-      });
+      var loadURL = FauxtonAPI.urls('document', 'server', targetDB, '_bulk_docs'),
+          payload = JSON.stringify({ 'docs': this._theData });
 
-      function sendData (loadURL, json) {
-        console.log(JSON.stringify(json));
-        $.ajax({
-          url: loadURL,
-          xhrFields: { withCredentials: true },
-          contentType: 'application/json; charset=UTF-8',
-          type: 'POST',
-          data: JSON.stringify(json),
-          success: function (resp) { console.log("yay"); },
-          error: function (resp) { console.log("errrrr"); return;}
-        });
-      }
+      $.ajax({
+        url: loadURL,
+        xhrFields: { withCredentials: true },
+        contentType: 'application/json; charset=UTF-8',
+        method: 'POST',
+        data: payload,
+        success: function (resp) { this.successfulImport(); },
+        error: function (resp) { this.importFailed(); }
+      });
+    },
+
+    successfulImport: function () {
+      console.log("yay");
+    },
+
+    importFailed: function (resp) {
+      console.log("errrrr"); return;
     },
 
     dispatch: function (action) {
