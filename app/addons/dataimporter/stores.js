@@ -234,7 +234,8 @@ define([
     },
 
     importFailed: function (resp) {
-      console.log("errrrr"); return;
+      console.log("errrrr");
+      return;
     },
 
     dispatch: function (action) {
