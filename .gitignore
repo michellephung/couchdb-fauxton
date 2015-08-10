@@ -23,6 +23,7 @@ settings.json*
 i18n.json
 !settings.json.default
 !assets/js/plugins/zeroclipboard/ZeroClipboard.swf
+!assets/js/libs/papaparse.min.js
 test/test.config.js
 app/initialize.js
 .module-cache
