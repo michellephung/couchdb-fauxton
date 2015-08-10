@@ -606,7 +606,9 @@ define([
     },
 
     importData : function () {
-      Actions.loadDataIntoDatabase(this.state.targetDB);
+      var createNewDB = !this.state.selectExistingDB;
+      console.log(this.state.targetDB);
+      Actions.loadDataIntoDatabase(createNewDB, this.state.targetDB);
     },
 
     render: function () {
@@ -619,8 +621,10 @@ define([
           <div id="data-import-controls">
             {targetDatabaseInput}
             {this.newOrExistingToggle()}
-            {startOverButton}
-            {this.importButton()}
+            <div>
+              {startOverButton}
+              {this.importButton()}
+            </div>
           </div>
         </div>
       );

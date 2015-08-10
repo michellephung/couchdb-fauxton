@@ -193,8 +193,27 @@ define([
       };
     },
 
-    loadDataIntoDatabase: function (targetDB) {
+    loadDataIntoDatabase: function (createNewDB, targetDB) {
+      console.log(arguments);
+      if (createNewDB) {
+        this.loadIntoNewDB(targetDB);
+      } else {
+        this.loadDataIntoTarget(targetDB);
+      }
+    },
 
+    loadIntoNewDB: function (targetDB) {
+      $.ajax({
+        url: FauxtonAPI.urls('databaseBaseURL', 'server', targetDB),
+        xhrFields: { withCredentials: true },
+        contentType: 'application/json; charset=UTF-8',
+        method: 'PUT',
+        success: function (resp) { this.loadDataIntoTarget(targetDB); }.bind(this),
+        error: function (resp) { this.importFailed(); }.bind(this)
+      });
+    },
+
+    loadDataIntoTarget: function (targetDB) {
       var loadURL = FauxtonAPI.urls('document', 'server', targetDB, '_bulk_docs'),
           payload = JSON.stringify({ 'docs': this._theData });
 
@@ -204,13 +223,14 @@ define([
         contentType: 'application/json; charset=UTF-8',
         method: 'POST',
         data: payload,
-        success: function (resp) { this.successfulImport(); },
-        error: function (resp) { this.importFailed(); }
+        success: function (resp) { this.successfulImport(targetDB); }.bind(this),
+        error: function (resp) { this.importFailed(); }.bind(this)
       });
     },
 
-    successfulImport: function () {
+    successfulImport: function (targetDB) {
       console.log("yay");
+      FauxtonAPI.navigate(FauxtonAPI.urls('allDocs', 'app', targetDB, ''));
     },
 
     importFailed: function (resp) {
@@ -250,7 +270,7 @@ define([
         break;
 
         case ActionTypes.DATA_IMPORTER_LOAD_DATA_INTO_DB:
-          this.loadDataIntoDatabase(action.targetDB);
+          this.loadDataIntoDatabase(action.targetDBdata.isExisting, action.targetDBdata.targetDB);
         break;
 
         default:

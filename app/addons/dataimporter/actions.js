@@ -50,10 +50,13 @@ function (FauxtonAPI, ActionTypes, Resources) {
         value: value
       });
     },
-    loadDataIntoDatabase: function (targetDB) {
+    loadDataIntoDatabase: function (createNewDB, targetDB) {
       FauxtonAPI.dispatch({
         type: ActionTypes.DATA_IMPORTER_LOAD_DATA_INTO_DB,
-        targetDB: targetDB
+        targetDBdata: {
+          targetDB : targetDB,
+          isExisting: createNewDB
+        }
       });
     }
   };
