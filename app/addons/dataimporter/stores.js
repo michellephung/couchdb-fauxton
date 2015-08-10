@@ -14,7 +14,7 @@ define([
   'app',
   'api',
   'addons/dataimporter/actiontypes',
-  'assets/js/libs/papaparse.min'
+  'papaparse'
 ], function (app, FauxtonAPI, ActionTypes, Papa) {
 
   Papa.SCRIPT_PATH = '../../assets/js/libs/papaparse.min.js';
