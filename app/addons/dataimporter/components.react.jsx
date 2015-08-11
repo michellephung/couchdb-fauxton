@@ -15,8 +15,9 @@ define([
   'react',
   'addons/dataimporter/stores',
   'addons/dataimporter/actions',
-  'addons/components/react-components.react'
-], function (FauxtonAPI, React, Stores, Actions, Components) {
+  'addons/components/react-components.react',
+  'helpers'
+], function (FauxtonAPI, React, Stores, Actions, Components, Helpers) {
 
   var dataImporterStore = Stores.dataImporterStore;
 
@@ -34,7 +35,10 @@ define([
         getSmallPreviewOfData: dataImporterStore.getSmallPreviewOfData(),
         getHeaderConfig: dataImporterStore.getConfigSetting('header'),
         getDelimiterChosen: dataImporterStore.getConfigSetting('delimiter'),
-        getAllDBs: dataImporterStore.getAllDBs()
+        getAllDBs: dataImporterStore.getAllDBs(),
+        getFileSize: dataImporterStore.getFileSize,
+        getTimeSinceLoad: dataImporterStore.getTimeSinceLoad,
+        getMaxSize: dataImporterStore.getMaxSize()
       };
     },
 
@@ -72,7 +76,11 @@ define([
       }
 
       return <DataImporterDropZone
-          isLoading={this.state.isDataCurrentlyLoading} />;
+          isLoading={this.state.isDataCurrentlyLoading}
+          isBigFile={this.state.isBigFile}
+          getFileSize={this.state.getFileSize}
+          getTimeSinceLoad={this.state.getTimeSinceLoad}
+          maxSize = {this.state.getMaxSize} />;
     }
   });
 
@@ -81,7 +89,10 @@ define([
       return {
         draggingOver: false,
         loading: this.props.isLoading,
-        showLimitInfo: false
+        showLimitInfo: false,
+        fileSize: this.props.getFileSize,
+        timeSinceLoad: this.props.getTimeSinceLoad,
+        fileTooBig: false
       };
     },
 
@@ -96,22 +107,28 @@ define([
     },
 
     drop: function (e) {
-      this.captureEventAndSetLoading(e);
+      e.preventDefault();
       var file = e.nativeEvent.dataTransfer.files[0];
-      Actions.loadFile(file);
+      this.checkSize(file);
     },
 
     filechosen: function (e) {
-      this.captureEventAndSetLoading(e);
+      e.preventDefault();
       var file = e.nativeEvent.target.files[0];
-      Actions.loadFile(file);
+      this.checkSize(file);
     },
 
-    captureEventAndSetLoading: function (e) {
-      e.preventDefault();
+    checkSize: function (file) {
+      this.setState({ fileSize: file.size });
       this.setState({ draggingOver: false });
-      this.setState({ loading: true });
-      Actions.dataIsCurrentlyLoading();
+
+      if (file.size > this.props.maxSize) {
+        this.setState({ fileTooBig: true });
+      } else {
+        Actions.loadFile(file);
+        this.setState({ loading: true });
+        Actions.dataIsCurrentlyLoading();
+      }
     },
 
     uploadButton: function () {
@@ -147,13 +164,34 @@ define([
       );
     },
 
+    loadingBoxBigFileMessage: function () {
+      return (
+        <div className="loading-big-file-msg">
+          <div>This is a large file: {Helpers.formatSize(this.state.fileSize)}</div>
+          <div>Large files may take up to 10 minutes to load</div>
+          <div>Elapsed time: {this.state.timeSinceLoad()}</div>
+        </div>
+      );
+    },
+
+    fileTooBigMsg: function () {
+      return (
+        <p className="file-exceeds-max-msg">
+          Your file was too big. Please choose another one.
+        </p>
+      );
+    },
+
     defaultBox: function () {
+      var fileTooBig = this.state.fileTooBig ? this.fileTooBigMsg() : '';
+
       return (
         <div className={"dropzone"}
           onDragOver={this.dragOver}
           onDragLeave={this.endDragover}
           onDrop={this.drop}>
           <div className="dropzone-msg default">
+            {fileTooBig}
             {this.uploadButton()}
             <p>Or drag a file into box.</p>
           </div>
@@ -177,10 +215,14 @@ define([
     },
 
     boxIsLoading: function () {
+      var loadingBoxBigFileMessage = this.props.isBigFile ?
+        this.loadingBoxBigFileMessage() : '';
+
       return (
         <div className={"dropzone loading-background"}>
           <div className="dropzone-msg loading">
             Loading...
+            {loadingBoxBigFileMessage}
             <Components.LoadLines />
           </div>
         </div>
@@ -250,16 +292,28 @@ define([
     handleScroll: function (e) {
       this.setState({left: document.getElementById('preview-page').scrollLeft});
     },
+    fileMetadataInfo: function () {
+      var totalRows = this.props.rowsTotal;
+      return (
+        <div className="top-row">
+          <div className="big-file-info-message">
+            <p className="big-file-preview-limit-info-message">
+              All {totalRows} rows from this file will be imported.
+            </p>
+          </div>
+        </div>
+      );
+    },
     render: function () {
 
-      var bigFileInfoMessage =
-            this.props.isBigFile ? this.bigFilePreviewWarning() : "",
+      var fileInfoMessage =
+            this.props.isBigFile ? this.bigFilePreviewWarning() :  this.fileMetadataInfo(),
           style = {'left': this.state.left};
 
       return (
         <div id="preview-page" >
           <div id="data-import-options" style={style}>
-            {bigFileInfoMessage}
+            {fileInfoMessage}
             <OptionsRow getDelimiterChosen={this.props.getDelimiterChosen} />
           </div>
           <div className="preview-data-space">
@@ -278,7 +332,7 @@ define([
               getSmallPreviewOfData={this.props.getSmallPreviewOfData}
               getHeaderConfig={this.props.getHeaderConfig} />
           </div>
-          <Footer getAllDBs={this.props.getAllDBs}/>
+          <Footer getAllDBs={this.props.getAllDBs} />
         </div>
       );
     }
@@ -458,9 +512,9 @@ define([
 
   var JSONView = React.createClass({
     objectify: function (array) {
-      return _reduce(array, function (obj, val, i) {
+      return _.reduce(array, function (obj, val, i) {
         obj[i] = val;
-        return obj
+        return obj;
       }, {});
     },
 
@@ -542,9 +596,9 @@ define([
 
     newOrExistingToggle : function () {
       var config = {
-        title: '',
+        title: 'Load into',
         leftLabel : 'Existing database',
-        rightLabel : 'Load in a new database',
+        rightLabel : 'New database',
         defaultLeft: true,
         leftClick: function () {
           this.setState({
@@ -565,7 +619,7 @@ define([
       var selected = this.state.targetDB;
 
       var setup = {
-        title: 'Choose A Database',
+        title: 'Choose a database',
         id: 'data-importer-choose-db',
         selected: selected,
         selectOptions: this.getExistingDBList()
@@ -580,6 +634,7 @@ define([
           <input
             id="type-new-db-name-here"
             type="text"
+            placeholder="Type new database name..."
             value={this.state.newDatabaseName}
             onChange={this.newDatabaseNameChange} />
         </div>
@@ -604,7 +659,6 @@ define([
 
     importData : function () {
       var createNewDB = !this.state.selectExistingDB;
-      console.log(this.state.targetDB);
       Actions.loadDataIntoDatabase(createNewDB, this.state.targetDB);
     },
 
@@ -616,9 +670,9 @@ define([
       return (
         <div id="preview-page-footer-container">
           <div id="data-import-controls">
-            {targetDatabaseInput}
             {this.newOrExistingToggle()}
-            <div>
+            {targetDatabaseInput}
+            <div className="restart-or-load">
               {startOverButton}
               {this.importButton()}
             </div>

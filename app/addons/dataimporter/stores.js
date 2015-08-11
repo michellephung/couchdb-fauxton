@@ -29,13 +29,17 @@ define([
         this._theData = [];
         this._theMetadata = [];
         this._smallData = [];
-        this._time = 0;
         this._showView = 'table';
         this._theFile = { size: 0 };
         this._config = this.getDefaultConfig();
         this._completeFn = this._config.complete;
         this._errorFn = this._config.error;
+        this._fileSize = 0;
+        this._time = "just started";
+        this._repeatTimeID;
         this.fetchAllDBs();
+        this._chunkedData = [];
+        this._maxSize = 150000000;  //in bytes
       } // else keeps store as it was when you left
     },
 
@@ -45,9 +49,15 @@ define([
         dataType: "json",
         url: window.location.origin + "/_all_dbs"
       }).then(function (resp) {
-        this._all_dbs = resp;
+        this._all_dbs = _.filter(resp, function (dbName) {
+          return dbName[0] !== '_'; //_all_dbs without _ as first letter
+        });
         this.triggerChange();
       }.bind(this));
+    },
+
+    getMaxSize: function () {
+      return this._maxSize;
     },
 
     getAllDBs: function () {
@@ -59,11 +69,8 @@ define([
     },
 
     dataIsLoading: function () {
+      this._startTime = app.helpers.moment();
       this._isDataCurrentlyLoading = true;
-    },
-
-    getTime: function () {
-      return this._time;
     },
 
     hasDataLoaded: function () {
@@ -72,6 +79,7 @@ define([
 
     dataLoaded: function () {
       this._hasDataLoaded = true;
+      clearInterval(this._repeatTimeID);
     },
 
     errorInDataLoading: function () {
@@ -82,8 +90,23 @@ define([
       this._theData = data;
     },
 
+    getFileSize: function () {
+      return this._theFile.size;
+    },
+
     isThisABigFile: function () {
-      return this._theFile.size > 75000 ? true : false;
+      return this._theFile.size > 750000 ? true : false;
+    },
+
+    getTimeSinceLoad: function () {
+      return this._time;
+    },
+
+    repeatTime: function () {
+      this._repeatTimeID = setInterval(function () {
+        this._time = app.helpers.getDateFromNow(this._startTime);
+        this.triggerChange();
+      }.bind(this), 3000);
     },
 
     loadMeta: function (meta) {
@@ -92,6 +115,7 @@ define([
 
     loadFile: function (file) {
       this._theFile = file;
+      this.repeatTime();
     },
 
     getTotalRows: function () {
@@ -108,16 +132,14 @@ define([
 
     calcSmallPreviewOfData: function () {
       var filesize = this._theFile.size,
-          rows = this._theData.length,
+          rows = this._totalRows,
           sizeOfEachRow = filesize / rows, //this is approximate
-          sizeCap = 75000,  //in bytes
+          sizeCap = 750000,  //in bytes
           numberOfRowsToShow;
 
       numberOfRowsToShow = Math.ceil(sizeCap / sizeOfEachRow);
 
       this._rowsShown = numberOfRowsToShow;
-      console.log(numberOfRowsToShow);
-      this._totalRows = rows;
       this._smallData = this._theData.slice(0, this._rowsShown);
     },
 
@@ -147,13 +169,22 @@ define([
     loadingComplete: function (results) {
       this.loadMeta(results.meta);
       this.loadData(results.data);
+      this._totalRows = this._theData.length;
 
       if (this.isThisABigFile()) {
         this.calcSmallPreviewOfData();
       }
 
+      this.chunkData();
       this.dataLoaded();
       this.triggerChange();
+    },
+
+    chunkData: function () {
+      for (var i = 0; i < this._theData.length; i += 500) {
+        var oneChunk = this._theData.slice(i, i + 500);
+        this._chunkedData.push(oneChunk);
+      }
     },
 
     clearData: function () {
@@ -173,10 +204,10 @@ define([
         delimiter : '',  // auto-detect
         newline: '',  // auto-detect
         header: true,
-        dynamicTyping: false,
+        dynamicTyping: true,
         preview: 0,
         encoding: '',
-        worker: true, //so the page doesn't lock up
+        worker: true, //true = page doesn't lock up
         comments: false,
         complete: function (results) {
           this.loadingComplete(results);
@@ -187,14 +218,13 @@ define([
         }.bind(this),
         download: false,
         skipEmptyLines: false,
-        chunk: undefined,
-        fastMode: false,
+        chunk: undefined, //define function for streaming
         beforeFirstChunk: undefined,
       };
     },
 
     loadDataIntoDatabase: function (createNewDB, targetDB) {
-      console.log(arguments);
+
       if (createNewDB) {
         this.loadIntoNewDB(targetDB);
       } else {
@@ -216,25 +246,34 @@ define([
     },
 
     loadDataIntoTarget: function (targetDB) {
-      var loadURL = FauxtonAPI.urls('document', 'server', targetDB, '_bulk_docs'),
-          payload = JSON.stringify({ 'docs': this._theData });
 
-      $.ajax({
-        url: loadURL,
-        xhrFields: { withCredentials: true },
-        contentType: 'application/json; charset=UTF-8',
-        method: 'POST',
-        data: payload
-      }).then(function (resp) {
-        this.successfulImport(targetDB);
-      }.bind(this), function (resp) {
-        this.importFailed();
+      var loadURL = FauxtonAPI.urls('document', 'server', targetDB, '_bulk_docs');
+      //payload = JSON.stringify({ 'docs': this._theData });
+
+      _.each(this._chunkedData, function (data, i) {
+        var payload = JSON.stringify({ 'docs': data });
+        console.log(i);
+        $.ajax({
+          url: loadURL,
+          xhrFields: { withCredentials: true },
+          contentType: 'application/json; charset=UTF-8',
+          method: 'POST',
+          data: payload
+        }).then(function (resp) {
+          this.successfulImport(targetDB);
+          i++;
+          if (i === this._chunkedData.length ) {
+            console.log("alldone");
+          }
+        }.bind(this), function (resp) {
+          this.importFailed();
+        }.bind(this));
       }.bind(this));
     },
 
     successfulImport: function (targetDB) {
       console.log("yay");
-      FauxtonAPI.navigate(FauxtonAPI.urls('allDocs', 'app', targetDB, ''));
+      FauxtonAPI.navigate(FauxtonAPI.urls('allDocs', 'app', targetDB, '?include_docs=true'));
     },
 
     importFailed: function (resp) {
@@ -256,6 +295,7 @@ define([
         case ActionTypes.DATA_IMPORTER_LOAD_FILE:
           this.loadFile(action.file);
           this.papaparse(action.file);
+          this.triggerChange();
         break;
 
         case ActionTypes.DATA_IMPORTER_SET_PREVIEW_VIEW:

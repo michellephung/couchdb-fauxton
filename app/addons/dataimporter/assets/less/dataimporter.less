@@ -41,9 +41,20 @@
     }
   }
 
+  .loading-big-file-msg {
+    color: black;
+    font-size: 14px;
+    padding: 10px;
+  }
+
   &.limit-info {
     background-color: #FFF;
     border-color: #FFF;
+  }
+ 
+  .file-exceeds-max-msg {
+    color: black;
+    font-size: 13px;
   }
 
   .dropzone-msg {
@@ -245,10 +256,17 @@
     > div {
       display: inline-block;
       margin-right: 15px;
+      vertical-align: text-top;
+    }
+
+    .restart-or-load  {
+      margin-top: 11px;
     }
 
     /*845px is the width of all three control on one line */
-    @media only screen and (min-width : 845px) { text-align: center; } 
+    @media only screen and (min-width : 845px) { 
+      text-align: center; 
+    } 
   }
 
   #doc-list {
@@ -271,7 +289,7 @@
     
     ul.dropdown-select.show {
       position: absolute;
-      top: -164px;
+      top: -163px;
       max-height: 180px;
       overflow-y: scroll;
       overflow-x: hidden;
@@ -283,8 +301,8 @@
     width: @footerWidthSingtons;
     height: 40px;
     font-size: 11px;
-    vertical-align: bottom;
     cursor: pointer;
+    vertical-align: text-bottom;
 
     #title {
       color: #838383;
@@ -316,19 +334,21 @@
       color: #908F8F;
       width: 100px;
       padding-bottom: 20px;
-      font-weight: bold;
+      vertical-align: text-top;
 
       &:hover {
         text-decoration: none;
         color: white;
         background-color: #4D4D4D;
+        border: 1px solid #4D4D4D;
       }
     }
 
     &#data-import-load-button {
-      background-color: @darkRed;
-      border: 1px solid @darkRed;
+      background-color: #5bb75b;
+      border: 1px solid #5bb75b;
       height: 22px;
+      vertical-align: text-top;
     }
 
     .fonticon{
