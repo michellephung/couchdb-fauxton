@@ -44,7 +44,7 @@ define([
         method: "GET",
         dataType: "json",
         url: window.location.origin + "/_all_dbs"
-      }).done(function (resp) {
+      }).then(function (resp) {
         this._all_dbs = resp;
         this.triggerChange();
       }.bind(this));
@@ -207,10 +207,12 @@ define([
         url: FauxtonAPI.urls('databaseBaseURL', 'server', targetDB),
         xhrFields: { withCredentials: true },
         contentType: 'application/json; charset=UTF-8',
-        method: 'PUT',
-        success: function (resp) { this.loadDataIntoTarget(targetDB); }.bind(this),
-        error: function (resp) { this.importFailed(); }.bind(this)
-      });
+        method: 'PUT'
+      }).then(function (resp) {
+        this.loadDataIntoTarget(targetDB);
+      }.bind(this), function (resp) {
+        this.importFailed();
+      }.bind(this));
     },
 
     loadDataIntoTarget: function (targetDB) {
@@ -222,10 +224,12 @@ define([
         xhrFields: { withCredentials: true },
         contentType: 'application/json; charset=UTF-8',
         method: 'POST',
-        data: payload,
-        success: function (resp) { this.successfulImport(targetDB); }.bind(this),
-        error: function (resp) { this.importFailed(); }.bind(this)
-      });
+        data: payload
+      }).then(function (resp) {
+        this.successfulImport(targetDB);
+      }.bind(this), function (resp) {
+        this.importFailed();
+      }.bind(this));
     },
 
     successfulImport: function (targetDB) {
@@ -234,8 +238,7 @@ define([
     },
 
     importFailed: function (resp) {
-      console.log("errrrr");
-      return;
+      console.log("errrrr", resp);
     },
 
     dispatch: function (action) {

@@ -57,11 +57,11 @@ define([
     render: function () {
       if (this.state.hasDataLoaded) {
         return (
-          <DataImporterPreviewData 
-            rowShown={this.state.rowShown} 
-            rowsTotal={this.state.rowsTotal} 
-            data={this.state.data} 
-            isBigFile={this.state.isBigFile} 
+          <DataImporterPreviewData
+            rowShown={this.state.rowShown}
+            rowsTotal={this.state.rowsTotal}
+            data={this.state.data}
+            isBigFile={this.state.isBigFile}
             meta={this.state.meta}
             getPreviewView={this.state.getPreviewView}
             getSmallPreviewOfData={this.state.getSmallPreviewOfData}
@@ -69,10 +69,10 @@ define([
             getDelimiterChosen={this.state.getDelimiterChosen}
             getAllDBs = {this.state.getAllDBs} />
         );
-      } else {
-        return <DataImporterDropZone
-          isLoading={this.state.isDataCurrentlyLoading} />;
       }
+
+      return <DataImporterDropZone
+          isLoading={this.state.isDataCurrentlyLoading} />;
     }
   });
 
@@ -149,9 +149,9 @@ define([
 
     defaultBox: function () {
       return (
-        <div className={"dropzone"} 
-          onDragOver={this.dragOver} 
-          onDragLeave={this.endDragover} 
+        <div className={"dropzone"}
+          onDragOver={this.dragOver}
+          onDragLeave={this.endDragover}
           onDrop={this.drop}>
           <div className="dropzone-msg default">
             {this.uploadButton()}
@@ -164,9 +164,9 @@ define([
 
     boxIsDraggingOver: function () {
       return (
-        <div className={"dropzone dragging-file-in-background"} 
-          onDragOver={this.dragOver} 
-          onDragLeave={this.endDragover} 
+        <div className={"dropzone dragging-file-in-background"}
+          onDragOver={this.dragOver}
+          onDragLeave={this.endDragover}
           onDrop={this.drop}>
           <div className="dropzone-msg draggingover">
             <span className="fonticon icon-file-text-alt"></span>
@@ -190,8 +190,8 @@ define([
     boxShowLimitInfo: function () {
       return (
          <div className="dropzone limit-info"
-          onDragOver={this.dragOver} 
-          onDragLeave={this.endDragover} 
+          onDragOver={this.dragOver}
+          onDragLeave={this.endDragover}
           onDrop={this.drop}>
           <div className="dropzone-msg">
             <p>150 MB filesize limit.</p>
@@ -230,9 +230,9 @@ define([
         <div className="top-row">
           <div className="big-file-info-message">
             <p className="big-file-preview-limit-info-message">
-              Because of the size of this file, this preview only shows the 
+              Because of the size of this file, this preview only shows the
               first {rowShown} rows, out of {totalRows} rows total.
-              However, if you choose to load the data into a database, the 
+              However, if you choose to load the data into a database, the
               entirety of the file (all {totalRows} rows) will be imported.
             </p>
           </div>
@@ -257,22 +257,22 @@ define([
           style = {'left': this.state.left};
 
       return (
-        <div id="preview-page" > 
+        <div id="preview-page" >
           <div id="data-import-options" style={style}>
             {bigFileInfoMessage}
             <OptionsRow getDelimiterChosen={this.props.getDelimiterChosen} />
           </div>
           <div className="preview-data-space">
-            <TableView 
-              data={this.props.data} 
-              isBigFile={this.props.isBigFile} 
+            <TableView
+              data={this.props.data}
+              isBigFile={this.props.isBigFile}
               meta={this.props.meta}
               getPreviewView={this.props.getPreviewView}
               getSmallPreviewOfData={this.props.getSmallPreviewOfData}
               getHeaderConfig={this.props.getHeaderConfig} />
-            <JSONView 
-              data={this.props.data} 
-              isBigFile={this.props.isBigFile} 
+            <JSONView
+              data={this.props.data}
+              isBigFile={this.props.isBigFile}
               meta={this.props.meta}
               getPreviewView={this.props.getPreviewView}
               getSmallPreviewOfData={this.props.getSmallPreviewOfData}
@@ -313,7 +313,7 @@ define([
       return <Components.ToggleState toggleConfig={config} />;
     },
 
-    numbers_format: function () {
+    numbersFormat: function () {
       var config = {
         title: 'Numbers are',
         leftLabel : 'Numbers',
@@ -388,7 +388,7 @@ define([
           <div className="options-row">
             {this.previewToggle()}
             {this.header()}
-            {this.numbers_format()}
+            {this.numbersFormat()}
             {this.delimiter()}
           </div>
         </div>
@@ -458,13 +458,10 @@ define([
 
   var JSONView = React.createClass({
     objectify: function (array) {
-      var object = {};
-
-      _.map(array, function (val, i) {
-        object[i] = val;
-      });
-
-      return object;
+      return _reduce(array, function (obj, val, i) {
+        obj[i] = val;
+        return obj
+      }, {});
     },
 
     rows: function () {
@@ -480,8 +477,8 @@ define([
             this.objectify(dataObj);
 
           return (
-            <Components.SimpleDoc 
-              id={"<UUID>_" + i} 
+            <Components.SimpleDoc
+              id={"<UUID>_" + i}
               content={JSON.stringify(obj, null, ' ')}
               key={i} />
           );
@@ -512,7 +509,7 @@ define([
 
     startOverButton: function () {
       return (
-        <a className="start-import-over-link footer-button" 
+        <a className="start-import-over-link footer-button"
           onClick={this.startover}>
           <span className="fonticon icon-repeat"></span>
             Start Over
