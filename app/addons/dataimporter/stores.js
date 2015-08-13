@@ -104,7 +104,11 @@ define([
 
     repeatTime: function () {
       this._repeatTimeID = setInterval(function () {
+        var secondsElapsed = app.helpers.moment().diff(this._startTime);
         this._time = app.helpers.getDateFromNow(this._startTime);
+        if (secondsElapsed < 60000) {
+          this._time = '~' + Math.ceil(secondsElapsed / 1000) + ' seconds ago';
+        }
         this.triggerChange();
       }.bind(this), 3000);
     },

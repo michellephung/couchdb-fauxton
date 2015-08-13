@@ -237,7 +237,7 @@ define([
           onDrop={this.drop}>
           <div className="dropzone-msg">
             <p>150 MB filesize limit.</p>
-            <p>Only .txt, .csv, .tsv, or .json files will import correctly.</p>
+            <p>Only .csv files will import correctly.</p>
           </div>
           {this.fileLimitLink("Close")}
         </div>
