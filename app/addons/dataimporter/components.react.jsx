@@ -36,7 +36,7 @@ define([
         getHeaderConfig: dataImporterStore.getConfigSetting('header'),
         getDelimiterChosen: dataImporterStore.getConfigSetting('delimiter'),
         getAllDBs: dataImporterStore.getAllDBs(),
-        getFileSize: dataImporterStore.getFileSize,
+        getFileSize: dataImporterStore.getFileSize(),
         getTimeSinceLoad: dataImporterStore.getTimeSinceLoad,
         getMaxSize: dataImporterStore.getMaxSize()
       };
@@ -71,7 +71,8 @@ define([
             getSmallPreviewOfData={this.state.getSmallPreviewOfData}
             getHeaderConfig= {this.state.getHeaderConfig}
             getDelimiterChosen={this.state.getDelimiterChosen}
-            getAllDBs = {this.state.getAllDBs} />
+            getAllDBs = {this.state.getAllDBs}
+            filesize={this.state.getFileSize} />
         );
       }
 
@@ -168,7 +169,7 @@ define([
       return (
         <div className="loading-big-file-msg">
           <div>This is a large file: {Helpers.formatSize(this.state.fileSize)}</div>
-          <div>Large files may take up to 10 minutes to load</div>
+          <div>Large files may take up to 5 minutes to load</div>
           <div>Elapsed time: {this.state.timeSinceLoad()}</div>
         </div>
       );
@@ -314,7 +315,9 @@ define([
         <div id="preview-page" >
           <div id="data-import-options" style={style}>
             {fileInfoMessage}
-            <OptionsRow getDelimiterChosen={this.props.getDelimiterChosen} />
+            <OptionsRow 
+              getDelimiterChosen={this.props.getDelimiterChosen}
+              filesize={this.props.filesize} />
           </div>
           <div className="preview-data-space">
             <TableView
@@ -436,14 +439,32 @@ define([
       return <Components.SmallDropdown dropdownSetup={setup}/>;
     },
 
+    renderControls: function () {
+      if (this.props.filesize < 200000) {
+        return (
+          <span>
+            {this.header()}
+            {this.numbersFormat()}
+            {this.delimiter()}
+          </span>
+        );
+      }
+      
+      return (
+        <p className="no-options-available">
+          Fine grained import options are disabled for files exceeding 200MB
+        </p>
+      );
+    },
+
     render: function () {
+      var controls = this.renderControls();
+
       return (
         <div className="import-options-row">
           <div className="options-row">
             {this.previewToggle()}
-            {this.header()}
-            {this.numbersFormat()}
-            {this.delimiter()}
+            {controls}
           </div>
         </div>
       );

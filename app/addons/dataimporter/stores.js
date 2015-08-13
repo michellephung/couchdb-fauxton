@@ -82,10 +82,6 @@ define([
       clearInterval(this._repeatTimeID);
     },
 
-    errorInDataLoading: function () {
-      this._errored = true;
-    },
-
     loadData: function (data) {
       this._theData = data;
     },
@@ -215,10 +211,13 @@ define([
         comments: false,
         complete: function (results) {
           this.loadingComplete(results);
+          this._changingConfig = false;
         }.bind(this),
         error: function () {
-          console.log("There was an error while parsing the file.");
-          this.errorInDataLoading();
+          var msg1 = 'There was an error while parsing the file.',
+              msg2 = 'Please try again.';
+
+          this.goToErrorScreen(msg1, msg2);
         }.bind(this),
         download: false,
         skipEmptyLines: false,
@@ -228,12 +227,27 @@ define([
     },
 
     loadDataIntoDatabase: function (createNewDB, targetDB) {
-
       if (createNewDB) {
+        if (this.dataBaseIsnew(targetDB)) {
+          var msg1 = 'The database ' + targetDB + ' already exists.',
+              msg2 = 'Are you sure you want to load the file into ' + targetDB + '?';
+
+          this.goToErrorScreen(msg1, msg2);
+        }
         this.loadIntoNewDB(targetDB);
       } else {
         this.loadDataIntoTarget(targetDB);
       }
+    },
+
+    dataBaseIsnew: function (targetDB) {
+      return _.some(this._all_dbs, targetDB);
+    },
+
+    goToErrorScreen: function () {
+      console.log(arguments);
+      this._errorMessage();
+      this.triggerChange();
     },
 
     loadIntoNewDB: function (targetDB) {
@@ -252,8 +266,6 @@ define([
     loadDataIntoTarget: function (targetDB) {
 
       var loadURL = FauxtonAPI.urls('document', 'server', targetDB, '_bulk_docs');
-      //payload = JSON.stringify({ 'docs': this._theData });
-
       _.each(this._chunkedData, function (data, i) {
         var payload = JSON.stringify({ 'docs': data });
         console.log(i);
@@ -276,12 +288,11 @@ define([
     },
 
     successfulImport: function (targetDB) {
-      console.log("yay");
       FauxtonAPI.navigate(FauxtonAPI.urls('allDocs', 'app', targetDB, '?include_docs=true'));
     },
 
     importFailed: function (resp) {
-      console.log("errrrr", resp);
+      console.log("errrrr", resp); //dosomething here
     },
 
     dispatch: function (action) {
