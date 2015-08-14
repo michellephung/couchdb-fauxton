@@ -452,7 +452,7 @@ define([
       
       return (
         <p className="no-options-available">
-          Fine grained import options are disabled for files exceeding 200MB
+          Fine grained import options are disabled for files exceeding 200KB
         </p>
       );
     },
