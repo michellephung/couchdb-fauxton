@@ -249,7 +249,6 @@ define([
     },
 
     getErrorMsg: function () {
-      console.log(this._errorMessageArray);
       return this._errorMessageArray;
     },
 
@@ -287,7 +286,11 @@ define([
         }).then(function (resp) {
           this.successfulImport(targetDB);
           i++;
-          if (i === this._chunkedData.length ) { console.log("alldone"); }
+          if (i === this._chunkedData.length ) {
+            console.log("alldone");
+            // we should add some loading lines while we wait for the loading to finish
+          }
+          this.init(true);
         }.bind(this), function (resp) {
           this.importFailed(resp, ['There was an error loading documents into ' + targetDB]);
         }.bind(this));
