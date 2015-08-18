@@ -717,24 +717,46 @@ define([
 
   var DataImporterError = React.createClass({
     makeMessage: function () {
-      var messages = this.props.errorMsg;
-      console.log(typeof messages);
+      var messagesArray = this.props.errorMsg;
+      
+      return messagesArray.map(function (message, i) {
+        return (
+          <div key={i}>
+            <hr/>
+            {this.subMessages(message)}
+          </div>
+        );
+      }.bind(this));
+    },
 
-      messages.map(function (msg, i) {
-        return <div>{msg}</div>;
+    subMessages: function (messages) {
+      return messages.map(function (msg, i) {
+        return <div key={i}>{msg}</div>;
       });
     },
 
+    startOverButton: function () {
+      return (
+        <a className="start-import-over-link footer-button"
+          onClick={this.startover}>
+          <span className="fonticon icon-repeat"></span>
+            Start Over
+        </a>
+      );
+    },
+
+    startover: function () {
+      Actions.dataImporterInit(true);
+    },
+
     render: function () {
-      var x = this.props.errorMsg;
       return (
         <div className="dropzone"> 
-          <div className="dropzone-msg">
-            An error has occured: 
+          <div className="error-window">
+            Errors: 
             {this.makeMessage()}
-            <div>Start Over</div>
-            <div>Go back to the data</div>
           </div>
+          {this.startOverButton()}
         </div>
       );
     }

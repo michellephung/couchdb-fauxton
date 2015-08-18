@@ -41,7 +41,8 @@ define([
         this._chunkedData = [];
         this._maxSize = 150000000;  //in bytes
         this._showErrorScreen = false;
-      } // else keeps store as it was when you left
+        this._errorMessageArray = [];
+      } // else keeps store as it was when you left the page
     },
 
     fetchAllDBs: function () {
@@ -218,7 +219,7 @@ define([
           var msg1 = 'There was an error while parsing the file.',
               msg2 = 'Please try again.';
 
-          this.goToErrorScreen(msg1, msg2);
+          this.goToErrorScreen('', [msg1, msg2]);
         }.bind(this),
         download: false,
         skipEmptyLines: false,
@@ -230,10 +231,8 @@ define([
     loadDataIntoDatabase: function (createNewDB, targetDB) {
       if (createNewDB) {
         if (this.dataBaseIsnew(targetDB)) {
-          var msg1 = 'The database ' + targetDB + ' already exists.',
-              msg2 = 'Are you sure you want to load the file into ' + targetDB + '?';
-
-          this.goToErrorScreen(msg1, msg2);
+          var msg1 = 'The database ' + targetDB + ' already exists.';
+          this.goToErrorScreen('', [msg1]);
         }
         this.loadIntoNewDB(targetDB);
       } else {
@@ -250,14 +249,14 @@ define([
     },
 
     getErrorMsg: function () {
-      return this._errorMessage;
+      console.log(this._errorMessageArray);
+      return this._errorMessageArray;
     },
 
     goToErrorScreen: function (resp, messageArray) {
       this._showErrorScreen = true;
-      console.log(typeof ["hello"]);
-      messageArray.unshift(resp);
-      this._errorMessage = messageArray;
+      messageArray.push(resp);
+      this._errorMessageArray.unshift(messageArray);
       this.triggerChange();
     },
 
@@ -286,13 +285,9 @@ define([
           method: 'POST',
           data: payload
         }).then(function (resp) {
-          this.importFailed(resp, ['There was an error loading documents into ' + targetDB]);
-          console.log("edit this");
-          //this.successfulImport(targetDB);
+          this.successfulImport(targetDB);
           i++;
-          if (i === this._chunkedData.length ) {
-            console.log("alldone");
-          }
+          if (i === this._chunkedData.length ) { console.log("alldone"); }
         }.bind(this), function (resp) {
           this.importFailed(resp, ['There was an error loading documents into ' + targetDB]);
         }.bind(this));
