@@ -14,7 +14,7 @@
 @import "../../../../../assets/less/bootstrap/mixins.less";
 
 .dropzone {
-  border: 2px solid gray;
+  border: 1px solid gray;
   background-color: #E8E8E8;
   height: calc(100% ~"-" 114px);
   min-height: 200px;
@@ -22,20 +22,22 @@
   margin: 50px;
   color: @darkRed;
   padding-top: 0px !important;
+  
   a {
     color: @darkRed;
   }
   
   &.dragging-file-in-background {
-    border: 2px solid @darkRed;
+    border: 1px solid @darkRed;
     background-color: #F0DAD9;
+    z-index: 100;
     .icon-file-text-alt {
       padding-right: 10px;
     }
   }
 
   &.loading-background {
-    border: 2px solid @darkRed;
+    border: 1px solid @darkRed;
     .icon-file-text-alt {
       padding-right: 10px;
     }
@@ -104,6 +106,7 @@
     color: white;
     background-color: @darkRed;
     font-size: 13px !important;
+    border: none;
 
     .icon-search {
       margin-right: 5px;
@@ -360,5 +363,4 @@
       padding-right: 10px;
     }
   }
-
 }

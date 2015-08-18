@@ -40,6 +40,7 @@ define([
         this.fetchAllDBs();
         this._chunkedData = [];
         this._maxSize = 150000000;  //in bytes
+        this._showErrorScreen = false;
       } // else keeps store as it was when you left
     },
 
@@ -244,9 +245,19 @@ define([
       return _.some(this._all_dbs, targetDB);
     },
 
-    goToErrorScreen: function () {
-      console.log(arguments);
-      this._errorMessage();
+    showErrorScreen: function () {
+      return this._showErrorScreen;
+    },
+
+    getErrorMsg: function () {
+      return this._errorMessage;
+    },
+
+    goToErrorScreen: function (resp, messageArray) {
+      this._showErrorScreen = true;
+      console.log(typeof ["hello"]);
+      messageArray.unshift(resp);
+      this._errorMessage = messageArray;
       this.triggerChange();
     },
 
@@ -268,7 +279,6 @@ define([
       var loadURL = FauxtonAPI.urls('document', 'server', targetDB, '_bulk_docs');
       _.each(this._chunkedData, function (data, i) {
         var payload = JSON.stringify({ 'docs': data });
-        console.log(i);
         $.ajax({
           url: loadURL,
           xhrFields: { withCredentials: true },
@@ -276,13 +286,15 @@ define([
           method: 'POST',
           data: payload
         }).then(function (resp) {
-          this.successfulImport(targetDB);
+          this.importFailed(resp, ['There was an error loading documents into ' + targetDB]);
+          console.log("edit this");
+          //this.successfulImport(targetDB);
           i++;
           if (i === this._chunkedData.length ) {
             console.log("alldone");
           }
         }.bind(this), function (resp) {
-          this.importFailed();
+          this.importFailed(resp, ['There was an error loading documents into ' + targetDB]);
         }.bind(this));
       }.bind(this));
     },
@@ -291,8 +303,8 @@ define([
       FauxtonAPI.navigate(FauxtonAPI.urls('allDocs', 'app', targetDB, '?include_docs=true'));
     },
 
-    importFailed: function (resp) {
-      console.log("errrrr", resp); //dosomething here
+    importFailed: function (resp, messageArray) {
+      this.goToErrorScreen(resp, messageArray);
     },
 
     dispatch: function (action) {

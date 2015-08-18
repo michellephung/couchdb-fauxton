@@ -38,7 +38,9 @@ define([
         getAllDBs: dataImporterStore.getAllDBs(),
         getFileSize: dataImporterStore.getFileSize(),
         getTimeSinceLoad: dataImporterStore.getTimeSinceLoad,
-        getMaxSize: dataImporterStore.getMaxSize()
+        getMaxSize: dataImporterStore.getMaxSize(),
+        showErrorScreen: dataImporterStore.showErrorScreen(),
+        errorMsg: dataImporterStore.getErrorMsg()
       };
     },
 
@@ -59,6 +61,10 @@ define([
     },
 
     render: function () {
+      if (this.state.showErrorScreen) {
+        return <DataImporterError errorMsg= {this.state.errorMsg} />;
+      }
+
       if (this.state.hasDataLoaded) {
         return (
           <DataImporterPreviewData
@@ -76,12 +82,14 @@ define([
         );
       }
 
-      return <DataImporterDropZone
+      return (
+        <DataImporterDropZone
           isLoading={this.state.isDataCurrentlyLoading}
           isBigFile={this.state.isBigFile}
           getFileSize={this.state.getFileSize}
           getTimeSinceLoad={this.state.getTimeSinceLoad}
-          maxSize = {this.state.getMaxSize} />;
+          maxSize = {this.state.getMaxSize} />
+      );
     }
   });
 
@@ -104,6 +112,7 @@ define([
 
     endDragover: function (e) {
       e.preventDefault();
+      e.stopPropagation();
       this.setState({draggingOver: false});
     },
 
@@ -187,10 +196,10 @@ define([
       var fileTooBig = this.state.fileTooBig ? this.fileTooBigMsg() : '';
 
       return (
-        <div className={"dropzone"}
+        <div className="dropzone"
           onDragOver={this.dragOver}
           onDragLeave={this.endDragover}
-          onDrop={this.drop}>
+          onDrop={this.drop} >
           <div className="dropzone-msg default">
             {fileTooBig}
             {this.uploadButton()}
@@ -208,8 +217,11 @@ define([
           onDragLeave={this.endDragover}
           onDrop={this.drop}>
           <div className="dropzone-msg draggingover">
-            <span className="fonticon icon-file-text-alt"></span>
-            <span className="loading-msg">Drop your file.</span>
+            <span className="fonticon icon-file-text-alt">
+            </span>
+            <span className="loading-msg">
+              Drop your file.
+            </span>
           </div>
         </div>
       );
@@ -449,7 +461,7 @@ define([
           </span>
         );
       }
-      
+
       return (
         <p className="no-options-available">
           Fine grained import options are disabled for files exceeding 200KB
@@ -703,9 +715,35 @@ define([
     }
   });
 
+  var DataImporterError = React.createClass({
+    makeMessage: function () {
+      var messages = this.props.errorMsg;
+      console.log(typeof messages);
+
+      messages.map(function (msg, i) {
+        return <div>{msg}</div>;
+      });
+    },
+
+    render: function () {
+      var x = this.props.errorMsg;
+      return (
+        <div className="dropzone"> 
+          <div className="dropzone-msg">
+            An error has occured: 
+            {this.makeMessage()}
+            <div>Start Over</div>
+            <div>Go back to the data</div>
+          </div>
+        </div>
+      );
+    }
+  });
+
   return {
     DataImporterController: DataImporterController,
     DataImporterDropZone: DataImporterDropZone,
-    DataImporterPreviewData: DataImporterPreviewData
+    DataImporterPreviewData: DataImporterPreviewData,
+    DataImporterError: DataImporterError
   };
 });
