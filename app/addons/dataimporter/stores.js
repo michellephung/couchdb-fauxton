@@ -42,6 +42,7 @@ define([
         this._maxSize = 150000000;  //in bytes
         this._showErrorScreen = false;
         this._errorMessageArray = [];
+        this._loadingInDBInProgress = false;
       } // else keeps store as it was when you left the page
     },
 
@@ -229,6 +230,9 @@ define([
     },
 
     loadDataIntoDatabase: function (createNewDB, targetDB) {
+      this._loadingInDBInProgress = true;
+      console.log("there", this.getIsloadingInDBInProgress());
+      this.triggerChange();
       if (createNewDB) {
         if (this.dataBaseIsnew(targetDB)) {
           var msg1 = 'The database ' + targetDB + ' already exists.';
@@ -253,6 +257,7 @@ define([
     },
 
     goToErrorScreen: function (resp, messageArray) {
+      this._loadingInDBInProgress = false;
       this._showErrorScreen = true;
       messageArray.push(resp);
       this._errorMessageArray.unshift(messageArray);
@@ -284,13 +289,12 @@ define([
           method: 'POST',
           data: payload
         }).then(function (resp) {
-          this.successfulImport(targetDB);
           i++;
           if (i === this._chunkedData.length ) {
             console.log("alldone");
-            // we should add some loading lines while we wait for the loading to finish
+            this.successfulImport(targetDB);
+            this.init(true);
           }
-          this.init(true);
         }.bind(this), function (resp) {
           this.importFailed(resp, ['There was an error loading documents into ' + targetDB]);
         }.bind(this));
@@ -298,11 +302,17 @@ define([
     },
 
     successfulImport: function (targetDB) {
+      console.log("nav");
       FauxtonAPI.navigate(FauxtonAPI.urls('allDocs', 'app', targetDB, '?include_docs=true'));
     },
 
     importFailed: function (resp, messageArray) {
+      this._loadingInDBInProgress = false;
       this.goToErrorScreen(resp, messageArray);
+    },
+
+    getIsloadingInDBInProgress: function () {
+      return this._loadingInDBInProgress;
     },
 
     dispatch: function (action) {

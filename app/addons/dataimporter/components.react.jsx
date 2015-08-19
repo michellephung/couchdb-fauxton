@@ -40,7 +40,8 @@ define([
         getTimeSinceLoad: dataImporterStore.getTimeSinceLoad,
         getMaxSize: dataImporterStore.getMaxSize(),
         showErrorScreen: dataImporterStore.showErrorScreen(),
-        errorMsg: dataImporterStore.getErrorMsg()
+        errorMsg: dataImporterStore.getErrorMsg(),
+        isloadingInDBInProgress: dataImporterStore.getIsloadingInDBInProgress()
       };
     },
 
@@ -78,7 +79,8 @@ define([
             getHeaderConfig= {this.state.getHeaderConfig}
             getDelimiterChosen={this.state.getDelimiterChosen}
             getAllDBs = {this.state.getAllDBs}
-            filesize={this.state.getFileSize} />
+            filesize={this.state.getFileSize}
+            isloadingInDBInProgress={this.state.isloadingInDBInProgress} />
         );
       }
 
@@ -251,6 +253,7 @@ define([
           <div className="dropzone-msg">
             <p>150 MB filesize limit.</p>
             <p>Only .csv files will import correctly.</p>
+            <p>Fine grained import options are shown only for files under 200KB</p>
           </div>
           {this.fileLimitLink("Close")}
         </div>
@@ -291,6 +294,7 @@ define([
               entirety of the file (all {totalRows} rows) will be imported.
             </p>
           </div>
+          {this.loadingIntoDB()}
         </div>
       );
     },
@@ -305,6 +309,18 @@ define([
     handleScroll: function (e) {
       this.setState({left: document.getElementById('preview-page').scrollLeft});
     },
+
+    loadingIntoDB: function () {
+      if (this.props.isloadingInDBInProgress) {
+        return (
+          <div className="dataIsLoading">
+            <Components.LoadLines />
+          </div>
+        );
+      }
+      return null;
+    },
+
     fileMetadataInfo: function () {
       var totalRows = this.props.rowsTotal;
       return (
@@ -314,6 +330,7 @@ define([
               All {totalRows} rows from this file will be imported.
             </p>
           </div>
+          {this.loadingIntoDB()}
         </div>
       );
     },
@@ -718,7 +735,7 @@ define([
   var DataImporterError = React.createClass({
     makeMessage: function () {
       var messagesArray = this.props.errorMsg;
-      
+
       return messagesArray.map(function (message, i) {
         return (
           <div key={i}>

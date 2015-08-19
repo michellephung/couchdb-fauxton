@@ -341,39 +341,45 @@
   
 }
 .footer-button {
-    width: @footerWidthSingtons;
-    height: 21px;
-    line-height: 22px;
-    font-size: 11px;
-    margin-top: 5px;
-    text-align: center;
-    cursor: pointer;
-    display: inline-block;
+  width: @footerWidthSingtons;
+  height: 21px;
+  line-height: 22px;
+  font-size: 11px;
+  margin-top: 5px;
+  text-align: center;
+  cursor: pointer;
+  display: inline-block;
 
-    &.start-import-over-link {
-      background-color: white;
-      border: 1px solid #ccc;
-      color: #908F8F;
-      width: 100px;
-      padding-bottom: 20px;
-      vertical-align: text-top;
+  &.start-import-over-link {
+    background-color: white;
+    border: 1px solid #ccc;
+    color: #908F8F;
+    width: 100px;
+    padding-bottom: 20px;
+    vertical-align: text-top;
 
-      &:hover {
-        text-decoration: none;
-        color: white;
-        background-color: #4D4D4D;
-        border: 1px solid #4D4D4D;
-      }
-    }
-
-    &#data-import-load-button {
-      background-color: #5bb75b;
-      border: 1px solid #5bb75b;
-      height: 22px;
-      vertical-align: text-top;
-    }
-
-    .fonticon{
-      padding-right: 10px;
+    &:hover {
+      text-decoration: none;
+      color: white;
+      background-color: #4D4D4D;
+      border: 1px solid #4D4D4D;
     }
   }
+
+  &#data-import-load-button {
+    background-color: #5bb75b;
+    border: 1px solid #5bb75b;
+    height: 22px;
+    vertical-align: text-top;
+  }
+
+  .fonticon{
+    padding-right: 10px;
+  }
+}
+
+.dataIsLoading {
+  float:right;
+  height: 40px;
+}
+
