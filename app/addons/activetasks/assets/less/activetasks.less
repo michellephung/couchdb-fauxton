@@ -1,0 +1,282 @@
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not
+// use this file except in compliance with the License. You may obtain a copy of
+// the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+// License for the specific language governing permissions and limitations under
+// the License.
+
+@import "../../../../../assets/less/bootstrap/variables.less";
+@import "../../../../../assets/less/variables.less";
+@import "../../../../../assets/less/bootstrap/mixins.less";
+@import "../../../../../assets/less/mixins.less";
+
+#active-tasks-page {
+  overflow: auto;
+  
+  .inner {
+    overflow: auto;
+    height: 100%;
+  }
+
+  .task-tabs li,
+  .active-tasks td.tableheader {
+    cursor: pointer;
+    padding-bottom: 15px;
+    
+    &.type {
+      width: 10%;
+    }
+
+    &.database {
+      width: 30%;
+    }
+
+    &.started-on {
+      width: 13%;
+    }
+
+    &.updated-on {
+      width: 13%;
+    }
+
+    &.pid {
+      width: 10%;
+    }
+
+    &.progress {
+      width: 23%;
+    }
+  }
+
+  #active-tasks-table {
+    min-width: 725px;
+    td.header-field {
+      padding: 0px;
+    }
+
+    p.multiline-active-tasks-message {
+      margin: 0;
+      line-height: 1.3;
+      margin-bottom: 3px;
+
+      &.time:nth-child(2) {
+        color: #888;
+      }
+
+      &.to-from-database{
+        &:first-child {
+          border-bottom: 1px solid #ddd;
+        }
+        padding-bottom: 15px;
+      }
+    }   
+  }
+
+  .task-search-database {
+    margin: 20px;
+  }
+
+  .active-tasks.dashboard-upper-menu {
+    left: 220px;
+
+    .closeMenu & {
+      left: 64px;
+    }
+  }
+
+  #active-tasks-filter-tabs {
+    height: 100px;
+    background-color: #CBCBCB;
+    padding-left: 20px;
+    overflow: hidden;
+    width: 100%;
+    min-width: 770px;
+
+    input {
+      display:none;
+    }
+
+    li {
+      background-color: #eee;
+      margin-top: 65px;
+      margin-left: 3px;
+      
+      &.active-tasks-checked {
+        background-color: #af2d24;
+
+        label {
+          color: #fff;
+        }
+      };
+
+      &:hover {
+        color: #af2d24;
+      };
+
+      label {
+        height: 35px;
+        width: 100%;
+        line-height: 35px;
+        text-align: center;
+        .noselect()
+      } 
+    }
+
+    #active-tasks-search-box {
+      display: inline;
+      font-size: 14px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      height: 36px;
+      background-color: #eee;
+      width: 200px;
+      margin: 0px;
+
+      &:focus {
+        background-color: #fff;
+        outline-color: #fff;
+      };
+    }
+  }
+
+  .dashboard-lower-menu {
+    padding-top: 90px;
+    padding-left: 20px;
+  }
+
+  .header-field {
+    background-color: #ccc;
+
+    
+    &.radio {
+      display: none;
+    }
+    
+    &.label-text {
+      display: block;
+      font-weight: bold;
+      padding:10px;
+      margin: 0px;
+      height: 50px;
+      .noselect()
+    }
+
+    .table td& {
+      padding: 0px;
+      margin: 0px;
+    }
+
+    .active-tasks-header {
+      background-color: #ccc;
+    }
+
+    .icon-caret-up, .icon-caret-down {
+      color: #af2d24;
+    }
+  }
+
+  .view-source-sequence-btn { // "View" Button
+    background-color: #999;
+    display: inline;
+    border-radius: 3px; 
+    padding: 2px;
+    margin: 3px;
+    color: #fff !important; 
+    white-space: nowrap;
+  }
+
+  .view-source-sequence-tray {
+    padding: 16px 20px 28px;
+
+    position: relative;
+    min-width: 360px;
+    top: 15px;
+    float: right;
+
+    &:before {
+      right: 20px;
+    }
+    input.input-xxlarge {
+      margin-bottom: 0px;
+      width: 250px;
+      .border-radius(5px 0 0 5px);
+    }
+
+    a.btn {
+      color: white;
+      background-color: #af2d24;
+      margin-left: 0;
+      line-height: 1.5em;
+      border: 0px;
+      padding: 10px 10px 9px;
+      font-size: 14px;
+      .border-radius(0 5px 5px 0);
+
+
+      &:hover, &.copy-button.zeroclipboard-is-hover {
+        background-color: #cbcbcb;
+        color: white;
+      }
+    }
+  }
+}
+
+.nav.polling-interval {
+  li.nav-header {
+    padding: 9px 0px 0px 9px;
+  }
+  li {
+    padding: 0px 15px 3px 9px;
+    margin-left: 0px;
+
+    input {
+      width: 100%;
+    }
+
+    label span {
+      font-weight: bold;
+    }
+  }
+}
+
+.polling-interval-widget {
+  width: 250px;
+  margin: 10px 20px 0px 0px;
+  color: #666;
+  float:right;
+
+  li {
+    list-style-type: none;
+  }
+
+  .polling-interval-time-label {
+    display: inline-block;
+    float: right;
+    margin-right: 0px;
+    cursor: default;
+  }
+  
+  #polling-range {
+    width: 250px;
+  }
+}
+
+.active-tasks-loading-lines-container {
+    
+  width: 350px;
+  
+  .active-tasks-loading-lines {
+    border: 0px;
+    position: relative;
+    top: 17px;
+    float: left;
+
+    #line1, #line2, #line3, #line4 {
+      background-color: #bbb;
+    }
+  }
+}
