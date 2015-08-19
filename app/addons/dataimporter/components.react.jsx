@@ -748,7 +748,7 @@ define([
 
     subMessages: function (messages) {
       return messages.map(function (msg, i) {
-        return <div key={i}>{msg}</div>;
+        return <pre key={i}>{msg}</pre>;
       });
     },
 
@@ -769,7 +769,7 @@ define([
     render: function () {
       return (
         <div className="dropzone"> 
-          <div className="error-window">
+          <div className="error-window pretty-print">
             Errors: 
             {this.makeMessage()}
           </div>

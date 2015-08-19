@@ -231,7 +231,6 @@ define([
 
     loadDataIntoDatabase: function (createNewDB, targetDB) {
       this._loadingInDBInProgress = true;
-      console.log("there", this.getIsloadingInDBInProgress());
       this.triggerChange();
       if (createNewDB) {
         if (this.dataBaseIsnew(targetDB)) {
@@ -282,6 +281,7 @@ define([
       var loadURL = FauxtonAPI.urls('document', 'server', targetDB, '_bulk_docs');
       _.each(this._chunkedData, function (data, i) {
         var payload = JSON.stringify({ 'docs': data });
+        var prettyprint = JSON.stringify({ 'docs': data }, null, 2);
         $.ajax({
           url: loadURL,
           xhrFields: { withCredentials: true },
@@ -291,18 +291,17 @@ define([
         }).then(function (resp) {
           i++;
           if (i === this._chunkedData.length ) {
-            console.log("alldone");
+            //console.log("alldone");
             this.successfulImport(targetDB);
             this.init(true);
           }
         }.bind(this), function (resp) {
-          this.importFailed(resp, ['There was an error loading documents into ' + targetDB]);
+          this.importFailed(resp, ['There was an error loading documents into ' + targetDB, 'Data that failed to load:' + prettyprint]);
         }.bind(this));
       }.bind(this));
     },
 
     successfulImport: function (targetDB) {
-      console.log("nav");
       FauxtonAPI.navigate(FauxtonAPI.urls('allDocs', 'app', targetDB, '?include_docs=true'));
     },
 
