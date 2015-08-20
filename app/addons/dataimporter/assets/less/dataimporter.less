@@ -13,6 +13,9 @@
 @import "../../../../../assets/less/variables.less";
 @import "../../../../../assets/less/bootstrap/mixins.less";
 
+
+
+
 .dropzone {
   border: 1px solid gray;
   background-color: #E8E8E8;
@@ -160,6 +163,9 @@
 @footerHeight : 120px;
 @fakeMargin: 15px solid #f1f1f1;
 @footerWidthSingtons : 190px;
+@smallMedia : ~"only screen and (max-width: 845px)";
+
+
 .chartSpacing() {
   max-width: 150px;
   white-space: nowrap;
@@ -272,6 +278,7 @@
     transform: translateY(-40%);
     vertical-align: middle;
     margin: 0px 15px 0px 15px;
+    text-align: center; 
 
     > div {
       display: inline-block;
@@ -284,8 +291,8 @@
     }
 
     /*845px is the width of all three control on one line */
-    @media only screen and (min-width : 845px) { 
-      text-align: center; 
+    @media @smallMedia { 
+      text-align: left; 
     } 
   }
 
@@ -314,6 +321,19 @@
       overflow-y: scroll;
       overflow-x: hidden;
       width: @footerWidthSingtons;
+
+      @media @smallMedia { 
+        width: 380px;
+      }
+      
+      li {
+        @media @smallMedia { 
+          width: 380px;
+        }
+      }
+    }
+    @media @smallMedia { 
+      width: 380px;
     }
   }
 
@@ -335,10 +355,15 @@
       margin-top: 3px;
       width: @footerWidthSingtons;
       font-size: 12px;
+      
+      @media @smallMedia { 
+        width: 380px;
+      }
+    }
+    @media @smallMedia { 
+      width: 380px;
     }
   }
-
-  
 }
 .footer-button {
   width: @footerWidthSingtons;
