@@ -16,7 +16,7 @@ define([
   'addons/documents/queryoptions/actions',
   'addons/documents/resources',
   'testUtils',
-  "react"
+  'react'
 ], function (FauxtonAPI, Views, Stores, Actions, Documents, utils, React) {
   FauxtonAPI.router = new FauxtonAPI.Router([]);
 
@@ -24,7 +24,7 @@ define([
   var TestUtils = React.addons.TestUtils;
   var restore = utils.restore;
 
-  describe('Data importer', function () {
+  describe('Data Importer', function () {
     var container, El;
 
     beforeEach(function () {
@@ -33,6 +33,34 @@ define([
 
     afterEach(function () {
       React.unmountComponentAtNode(container);
+    });
+
+    it('should upload the file on drag', function () {
+
+    });
+
+    it('should upload a file through the "Choose File" button', function () {
+
+    });
+
+    it('should prevent uploading files that are too big', function () {
+
+    });
+
+    it('should load data into new target database', function () {
+
+    });
+
+    it('should load data into existing target database', function () {
+
+    });
+
+    it('should navigate to target database after loading', function () {
+
+    });
+
+    it('should show errors in loading, if any', function () {
+
     });
 
   });
