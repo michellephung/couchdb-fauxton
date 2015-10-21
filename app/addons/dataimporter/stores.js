@@ -17,8 +17,10 @@ define([
 ], function (app, FauxtonAPI, ActionTypes) {
 
   var DATA_IMPORTER_NUMBERS = {
-    BIG_FILE_SIZE_CAP: 50000,
-    FILE_MAX_SIZE: 50000000,  //in bytes
+    MAX_ROWS_SHOWN: 500,
+    BIG_FILE_SIZE_THRESHOLD: 500000, // "a big file" is bigger than this number (500KB)
+    PREVIEW_SIZE_CAP: 50000,
+    FILE_MAX_SIZE: 50000000  //in bytes
   };
 
   var DataImporterStore = FauxtonAPI.Store.extend({
@@ -84,7 +86,7 @@ define([
     },
 
     isThisABigFile: function () {
-      return this._theFile.size > DATA_IMPORTER_NUMBERS.BIG_FILE_SIZE_CAP ? true : false;
+      return this._theFile.size > DATA_IMPORTER_NUMBERS.BIG_FILE_SIZE_THRESHOLD ? true : false;
     },
 
     getTimeSinceLoad: function () {
@@ -93,19 +95,7 @@ define([
 
     setTimeSinceLoad: function (elapsedtime) {
       this._time = elapsedtime;
-
     },
-
-    // repeatTime: function () {
-    //   this._repeatTimeID = setInterval(function () {
-    //     var secondsElapsed = app.helpers.moment().diff(this._startTime);
-    //     this._time = app.helpers.getDateFromNow(this._startTime);
-    //     if (secondsElapsed < 60000) {
-    //       this._time = '~' + Math.ceil(secondsElapsed / 1000) + ' seconds ago';
-    //     }
-    //     this.triggerChange();
-    //   }.bind(this), DATA_IMPORTER_NUMBERS.REPEAT_EVERY_3_SECONDS);
-    // },
 
     loadMeta: function (meta) {
       this._theMetadata = meta;
@@ -113,7 +103,6 @@ define([
 
     loadFile: function (file) {
       this._theFile = file;
-      //this.repeatTime();
     },
 
     getTotalRows: function () {
@@ -133,12 +122,11 @@ define([
       var filesize = this._theFile.size,
           rows = this._totalRows,
           sizeOfEachRow = filesize / rows, //this is approximate
-          sizeCap = DATA_IMPORTER_NUMBERS.BIG_FILE_SIZE_CAP,  //in bytes
+          sizeCap = DATA_IMPORTER_NUMBERS.PREVIEW_SIZE_CAP,  //in bytes
           numberOfRowsToShow;
 
       numberOfRowsToShow = Math.ceil(sizeCap / sizeOfEachRow);
-      numberOfRowsToShow = (numberOfRowsToShow < DATA_IMPORTER_NUMBERS.MAX_ROWS_TO_PREVIEW) ?
-        DATA_IMPORTER_NUMBERS.MAX_ROWS_TO_PREVIEW : numberOfRowsToShow;
+      numberOfRowsToShow = Math.min(numberOfRowsToShow, DATA_IMPORTER_NUMBERS.MAX_ROWS_SHOWN);
 
       this._rowsShown = numberOfRowsToShow;
       this._smallData = this._theData.slice(0, this._rowsShown);

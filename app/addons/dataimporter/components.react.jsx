@@ -261,7 +261,6 @@ define([
           <div className="dropzone-msg">
             <p>{this.props.maxSize / 1000000} MB filesize limit</p>
             <p>Only .csv files will import correctly</p>
-            <p>Fine grained import options are only for files under 200KB</p>
           </div>
           {this.fileLimitLink("Close")}
         </div>
