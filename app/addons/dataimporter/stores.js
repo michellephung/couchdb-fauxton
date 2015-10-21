@@ -47,6 +47,8 @@ define([
       this._errorMessageArray = [];
       this._loadingInDBInProgress = false;
       this._time = 'just started';
+      this._showConfigLoadingBars = false;
+      this._optionsAreDisabled = false;
     },
 
     setAllDBs: function (allDBs) {
@@ -186,12 +188,28 @@ define([
       return this._config[key];
     },
 
+    getShowConfigLoadingBars: function () {
+      return this._showConfigLoadingBars;
+    },
+
+    setShowConfigLoadingBars: function (show) {
+      this._showConfigLoadingBars = show;
+    },
+
     loadDataIntoDatabaseProgress: function () {
       this._loadingInDBInProgress = true;
     },
 
     showErrorScreen: function () {
       return this._showErrorScreen;
+    },
+
+    getAreOptionsDisabled: function () {
+      return this._optionsAreDisabled;
+    },
+
+    setAreOptionsDisabled: function (bool) {
+      this._optionsAreDisabled = bool;
     },
 
     getErrorMsg: function () {
@@ -240,7 +258,8 @@ define([
 
         case ActionTypes.DATA_IMPORTER_SET_PARSE_CONFIG:
           this.setParseConfig(action.key, action.value);
-          this.clearData();
+          this.setShowConfigLoadingBars(true);
+          this.setAreOptionsDisabled(true);
           this.triggerChange();
         break;
 
@@ -256,6 +275,8 @@ define([
 
         case ActionTypes.DATA_IMPORTER_LOADING_COMPLETE:
           this.loadingComplete(action.results, action.chunkedData);
+          this.setShowConfigLoadingBars(false);
+          this.setAreOptionsDisabled(false);
           this.triggerChange();
         break;
 

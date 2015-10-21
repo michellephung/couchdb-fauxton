@@ -1291,7 +1291,8 @@ function (app, FauxtonAPI, React, Stores, FauxtonComponents, ace, beautifyHelper
       id: React.PropTypes.string.isRequired,
       labelText: React.PropTypes.string.isRequired,
       onClick: React.PropTypes.func.isRequired,
-      selected: React.PropTypes.bool.isRequired
+      selected: React.PropTypes.bool.isRequired,
+      disabled: React.PropTypes.bool.isRequired
     },
 
     render: function () {
@@ -1304,7 +1305,8 @@ function (app, FauxtonAPI, React, Stores, FauxtonComponents, ace, beautifyHelper
             name="toggle-button-switch"
             className="input-toggle-hidden"
             checked={this.props.selected}
-            onChange={this.props.onClick} />
+            onChange={this.props.onClick} 
+            disabled={this.props.disabled} />
           <label
             htmlFor={"toggle-state-id-" + id}
             className={"checkbox-label toggle-state-button " + this.props.toggleClassName}>
@@ -1334,8 +1336,8 @@ function (app, FauxtonAPI, React, Stores, FauxtonComponents, ace, beautifyHelper
       //   labelText: 'bar'
       // }]
       buttons: React.PropTypes.array.isRequired,
-
-      title: React.PropTypes.string.isRequired
+      title: React.PropTypes.string.isRequired,
+      disabled: React.PropTypes.bool.isRequired
     },
 
     getInitialState: function () {
@@ -1370,7 +1372,8 @@ function (app, FauxtonAPI, React, Stores, FauxtonComponents, ace, beautifyHelper
             key={i}
             onClick={this.onClick.bind(this, i, config.onClick)}
             selected={config.selected}
-            labelText={config.labelText} />
+            labelText={config.labelText}
+            disabled={this.props.disabled} />
         );
       }.bind(this));
     },

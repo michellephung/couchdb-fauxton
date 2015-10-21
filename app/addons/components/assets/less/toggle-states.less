@@ -27,6 +27,8 @@
     margin-bottom: 3px;
   }
 
+  
+
   .toggles {
     color: #908F8F;
     border: 1px solid #ccc;
@@ -42,10 +44,14 @@
       font-size: 11px;
     }
 
-    input[type="radio"]:checked+label{ 
+    input[type="radio"]:checked+label { 
       font-weight: bold; 
       background: #E8E8E8;
       color: @darkRed;
+    }
+
+    input[type="radio"]:disabled+label {
+      cursor: not-allowed;
     }
   }  
 }

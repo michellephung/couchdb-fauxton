@@ -150,6 +150,11 @@ function (app, FauxtonAPI, ActionTypes, Resources, Papa) {
 
     setParseConfig: function (key, value) {
       this.config[key] = value;
+      FauxtonAPI.dispatch({
+        type: ActionTypes.DATA_IMPORTER_SET_PARSE_CONFIG,
+        key: key,
+        value: value
+      });
       this.papaparse(this.theFile);
     },
 

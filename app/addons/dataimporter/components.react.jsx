@@ -42,7 +42,9 @@ define([
         showErrorScreen: dataImporterStore.showErrorScreen(),
         errorMsg: dataImporterStore.getErrorMsg(),
         isLoadingInDBInProgress: dataImporterStore.dbPopulationInProgress(),
-        getChunkData: dataImporterStore.getChunkData()
+        getChunkData: dataImporterStore.getChunkData(),
+        showConfigLoadingBars: dataImporterStore.getShowConfigLoadingBars(),
+        disableButtons: dataImporterStore.getAreOptionsDisabled()
       };
     },
 
@@ -83,7 +85,9 @@ define([
             getAllDBs={this.state.getAllDBs}
             filesize={this.state.getFileSize}
             isLoadingInDBInProgress={this.state.isLoadingInDBInProgress}
-            chunkedData={this.state.getChunkData} />
+            chunkedData={this.state.getChunkData} 
+            configLoadingBars={this.state.showConfigLoadingBars}
+            disableButtons={this.state.disableButtons} />
         );
       }
 
@@ -343,17 +347,32 @@ define([
         </div>
       );
     },
+
+    configLoadingBars: function () {
+      if (this.props.configLoadingBars) {
+        return (
+          <div id="preview-screen-loading-lines-on-config-change">
+            <Components.LoadLines />
+          </div>
+        );
+      };
+    },
+
     render: function () {
       var fileInfoMessage =
-            this.props.isBigFile ? this.bigFilePreviewWarning() : this.fileMetadataInfo();
+            this.props.isBigFile ? this.bigFilePreviewWarning() : this.fileMetadataInfo(),
+          configLoadingBars = this.configLoadingBars();
 
       return (
         <div id="preview-page">
+        {configLoadingBars}
           <div id="data-import-options">
             {fileInfoMessage}
+            
             <OptionsRow
               getDelimiterChosen={this.props.getDelimiterChosen}
-              filesize={this.props.filesize} />
+              filesize={this.props.filesize}
+              disableButtons={this.props.disableButtons} />
           </div>
           <div className="preview-data-space">
             <TableView
@@ -386,7 +405,7 @@ define([
         {labelText: 'JSON', id: 'preview-toggle-b', onClick: function () { Actions.setPreviewView('json'); }, selected: false}
       ];
 
-      return <Components.ToggleStateController title="Preview View" buttons={buttons} />;
+      return <Components.ToggleStateController title="Preview View" buttons={buttons} disabled={this.props.disableButtons} />;
     },
 
     header: function () {
@@ -395,7 +414,7 @@ define([
         {labelText: 'No Header', id: 'header-toggle-b', onClick: function () { Actions.setParseConfig('header', false); }, selected: false}
       ];
 
-      return <Components.ToggleStateController title="Header" buttons={buttons} />;
+      return <Components.ToggleStateController title="Header" buttons={buttons} disabled={this.props.disableButtons} />;
     },
 
     numbersFormat: function () {
@@ -404,7 +423,7 @@ define([
         {labelText: 'Strings', id: 'numbers-format-toggle-b', onClick: function () { Actions.setParseConfig('dynamicTyping', false); }, selected: false}
       ];
 
-      return <Components.ToggleStateController title="Numbers are" buttons={buttons} />;
+      return <Components.ToggleStateController title="Numbers are" buttons={buttons} disabled={this.props.disableButtons} />;
     },
 
     delimiter: function () {
@@ -413,6 +432,7 @@ define([
       selected = selected === '\t' ? 'Tab' : selected;
 
       var setup = {
+        disabled: true,
         title: 'Delimiter',
         id: 'data-importer-delimiter',
         selected: selected,
@@ -492,9 +512,7 @@ define([
 
       return (
         data.map(function (dataObj, i) {
-          if (i < 500) {
-            return <tr key={i}>{this.insideEachRow(dataObj)}</tr>;
-          }
+          return <tr key={i}>{this.insideEachRow(dataObj)}</tr>;
         }.bind(this))
       );
     },
@@ -506,7 +524,7 @@ define([
     },
 
     header: function () {
-      if (this.props.getHeaderConfig) {
+      if (!_.isUndefined(this.props.meta.fields)) {
         var header = this.props.meta.fields;
         return (
           header.map(function (field, i) {
@@ -514,11 +532,11 @@ define([
           })
         );
       } else {
-        var longestRow = _.max(this.props.data, function (json) {
-          return json.length;
+        var longestRow = _.max(this.props.data, function (obj) {
+          return Object.keys(obj).length;
         });
         return (
-          longestRow.map(function (field, i) {
+          _.map(longestRow, function (field, i) {
            return <th key={i} title={i}>{i}</th>;
           })
         );
