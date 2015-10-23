@@ -43,7 +43,7 @@ define([
         errorMsg: dataImporterStore.getErrorMsg(),
         isLoadingInDBInProgress: dataImporterStore.dbPopulationInProgress(),
         getChunkData: dataImporterStore.getChunkData(),
-        showConfigLoadingBars: dataImporterStore.getShowConfigLoadingBars(),
+        showPleaseWaitForConfigMessage: dataImporterStore.getShowPleaseWaitForConfigMessage(),
         disableButtons: dataImporterStore.getAreOptionsDisabled()
       };
     },
@@ -85,8 +85,8 @@ define([
             getAllDBs={this.state.getAllDBs}
             filesize={this.state.getFileSize}
             isLoadingInDBInProgress={this.state.isLoadingInDBInProgress}
-            chunkedData={this.state.getChunkData} 
-            configLoadingBars={this.state.showConfigLoadingBars}
+            chunkedData={this.state.getChunkData}
+            showPleaseWaitForConfigMessage={this.state.showPleaseWaitForConfigMessage}
             disableButtons={this.state.disableButtons} />
         );
       }
@@ -333,7 +333,7 @@ define([
 
     fileMetadataInfo: function () {
       var totalRows = this.props.rowsTotal,
-          previewMsg = (totalRows > 500) ? 'This is a 500 row (max) preview of the file.' : '';
+          previewMsg = (totalRows > 500) ? ' This is a 500 row (max) preview of the file.' : '';
 
       return (
         <div className="top-row">
@@ -348,11 +348,11 @@ define([
       );
     },
 
-    configLoadingBars: function () {
-      if (this.props.configLoadingBars) {
+    pleaseWaitForConfigMessage: function () {
+      if (this.props.showPleaseWaitForConfigMessage) {
         return (
           <div id="preview-screen-loading-lines-on-config-change">
-            <Components.LoadLines />
+            Please wait...
           </div>
         );
       };
@@ -361,14 +361,13 @@ define([
     render: function () {
       var fileInfoMessage =
             this.props.isBigFile ? this.bigFilePreviewWarning() : this.fileMetadataInfo(),
-          configLoadingBars = this.configLoadingBars();
+          pleaseWaitMessage = this.pleaseWaitForConfigMessage();
 
       return (
         <div id="preview-page">
-        {configLoadingBars}
+        {pleaseWaitMessage}
           <div id="data-import-options">
             {fileInfoMessage}
-            
             <OptionsRow
               getDelimiterChosen={this.props.getDelimiterChosen}
               filesize={this.props.filesize}
@@ -668,8 +667,7 @@ define([
         selected: false
       }];
 
-      return <Components.ToggleStateController title="Load into" buttons={buttons} />;
-
+      return <Components.ToggleStateController title="Load into" buttons={buttons} disabled={false} />;
     },
 
     chooseDatabaseFromDropdown : function () {
@@ -707,7 +705,7 @@ define([
       return (
         <div id="data-import-load-button"
           className="footer-button data-import-load-button"
-          onClick={ this.importData }>
+          onClick={ this.importData } >
           <span className="icon-download-alt fonticon"></span>
           Load
         </div>

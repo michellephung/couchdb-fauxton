@@ -1305,7 +1305,7 @@ function (app, FauxtonAPI, React, Stores, FauxtonComponents, ace, beautifyHelper
             name="toggle-button-switch"
             className="input-toggle-hidden"
             checked={this.props.selected}
-            onChange={this.props.onClick} 
+            onChange={this.props.onClick}
             disabled={this.props.disabled} />
           <label
             htmlFor={"toggle-state-id-" + id}

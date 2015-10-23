@@ -81,6 +81,7 @@ function (app, FauxtonAPI, ActionTypes, Resources, Papa) {
 
     chunkData: function () {
       this.cleanTheDataForBlankID();
+      this.cleanTheDataForParsedExtra();
       for (var i = 0; i < this.theData.length; i += DATA_IMPORTER_NUMBERS.DATA_ROW_CHUNKS) {
         var oneChunk = this.theData.slice(i, i + DATA_IMPORTER_NUMBERS.DATA_ROW_CHUNKS);
         this.chunkedData.push(oneChunk);
@@ -95,6 +96,18 @@ function (app, FauxtonAPI, ActionTypes, Resources, Papa) {
       if (this.theData[lastElement]._id === '') {
         this.theData.splice(lastElement, 1);
       }
+    },
+
+    cleanTheDataForParsedExtra: function () {
+      _.each(this.theData, function (obj, i) {
+        _.each(obj, function (value, key) {
+          var val = value.toString();
+          if (key === '__parsed_extra') {
+            delete this.theData[i][key];
+            this.theData[i]['parsed_extra'] = val;
+          }
+        }.bind(this));
+      }.bind(this));
     },
 
     papaparse: function (file) {
@@ -194,8 +207,8 @@ function (app, FauxtonAPI, ActionTypes, Resources, Papa) {
     loadDataIntoTarget: function (targetDB, chunkedData) {
       var loadURL = FauxtonAPI.urls('databaseBaseURL', 'server', targetDB) + '/_bulk_docs';
       var importPromiseArray = _.map(chunkedData, function (data, i) {
-        var payload = JSON.stringify({'docs': data});
-        var prettyprint = JSON.stringify({'docs': data}, null, 2);
+      var payload = JSON.stringify({'docs': data});
+      var prettyprint = JSON.stringify({'docs': data}, null, 2);
 
         return $.ajax({
           url: loadURL,

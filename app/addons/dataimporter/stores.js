@@ -188,11 +188,11 @@ define([
       return this._config[key];
     },
 
-    getShowConfigLoadingBars: function () {
+    getShowPleaseWaitForConfigMessage: function () {
       return this._showConfigLoadingBars;
     },
 
-    setShowConfigLoadingBars: function (show) {
+    setShowPleaseWaitForConfigMessage: function (show) {
       this._showConfigLoadingBars = show;
     },
 
@@ -258,7 +258,7 @@ define([
 
         case ActionTypes.DATA_IMPORTER_SET_PARSE_CONFIG:
           this.setParseConfig(action.key, action.value);
-          this.setShowConfigLoadingBars(true);
+          this.setShowPleaseWaitForConfigMessage(true);
           this.setAreOptionsDisabled(true);
           this.triggerChange();
         break;
@@ -275,7 +275,7 @@ define([
 
         case ActionTypes.DATA_IMPORTER_LOADING_COMPLETE:
           this.loadingComplete(action.results, action.chunkedData);
-          this.setShowConfigLoadingBars(false);
+          this.setShowPleaseWaitForConfigMessage(false);
           this.setAreOptionsDisabled(false);
           this.triggerChange();
         break;
