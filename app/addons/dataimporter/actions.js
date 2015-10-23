@@ -101,10 +101,22 @@ function (app, FauxtonAPI, ActionTypes, Resources, Papa) {
     cleanTheDataForParsedExtra: function () {
       _.each(this.theData, function (obj, i) {
         _.each(obj, function (value, key) {
-          var val = value.toString();
           if (key === '__parsed_extra') {
+            // var val = '[';
+
+            // _.each(value, function (value, it) {
+            //   console.log(value, key, value.length);
+            //   val += value + ',';
+            // });
+
+            // val = val.slice(0, -1); //removes the last comma
+
+            // val += ']';
+
             delete this.theData[i][key];
-            this.theData[i]['parsed_extra'] = val;
+
+            this.theData[i]['parsed_extra'] = value;
+
           }
         }.bind(this));
       }.bind(this));
